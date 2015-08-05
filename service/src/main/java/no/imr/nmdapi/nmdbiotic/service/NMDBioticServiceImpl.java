@@ -22,11 +22,13 @@ public class NMDBioticServiceImpl implements NMDBioticService {
     @Override
     public void deleteData(final String missiontype, final String year, final String platform, final String delivery) {
         nmdDataDao.delete(missiontype, year, platform, delivery);
+        nmdDataDao.deleteDataset(missiontype, year, platform, delivery, "BIOTIC");
     }
 
    @Override
     public void insertData(final String missiontype, final String year, final String platform, final String delivery, final MissionType dataset) {
         nmdDataDao.insert(missiontype, year, platform, delivery, dataset, MissionType.class);
+        nmdDataDao.insertDataset(missiontype, year, platform, delivery, "BIOTIC");
     }
 
 
