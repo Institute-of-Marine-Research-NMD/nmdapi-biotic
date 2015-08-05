@@ -71,8 +71,11 @@ public class BioticController {
     /**
      * Update biotic data for mission.
      *
-     * @param mission
-     * @param bioticDatasetType
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
+     * @param missionType
      */
     @PerformanceLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.POST)
