@@ -1,2 +1,2 @@
 # nmdapi-biotic
-Rest API for biotic
+API for biotic data
