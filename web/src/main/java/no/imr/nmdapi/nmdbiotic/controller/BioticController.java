@@ -81,9 +81,9 @@ public class BioticController {
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void insertByMission(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery, @RequestBody MissionType missionType) {
+    public void insertByMission(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery, @RequestBody MissionType data) {
         LOGGER.info("Start BioticController.insertByMission");
-        nmdBioticService.insertData(missiontype, year, platform, delivery, missionType);
+        nmdBioticService.insertData(missiontype, year, platform, delivery, data);
     }
 
      /**
