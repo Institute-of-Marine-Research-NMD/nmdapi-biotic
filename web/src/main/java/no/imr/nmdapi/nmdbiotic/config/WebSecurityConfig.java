@@ -42,6 +42,12 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private List<AccessDecisionVoter<? extends Object>> accessDecisionVoters;
 
+    /**
+     * Application properties.
+     */
+    @Autowired
+    private org.apache.commons.configuration.Configuration configuration;
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId("microsoft:identityserver:Oauth");

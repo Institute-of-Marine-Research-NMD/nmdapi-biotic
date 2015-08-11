@@ -64,5 +64,19 @@ public interface NMDBioticService {
      */
     boolean hasData(String missiontype, String year, String platform, String delivery);
 
+    /**
+     *
+     * @param cruisenr
+     * @return
+     */
+    Object getDataByCruiseNr(String cruisenr);
+
+    /**
+     * 
+     * @param cruisenr
+     * @return
+     */
+    boolean hasDataByCruiseNr(String cruisenr);
+
 
 }

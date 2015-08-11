@@ -2,6 +2,7 @@ package no.imr.nmdapi.nmdbiotic.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
+import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -121,6 +123,41 @@ public class BioticController {
 
         } else {
          httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Get data by id or cruise number.
+     *
+     * @return Response object.
+     */
+    @PerformanceLogging
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object find(@RequestParam(value = "cruisenr", required = false) String cruisenr) {
+        LOGGER.info("Start BioticController.find");
+        if (cruisenr != null) {
+            return nmdBioticService.getDataByCruiseNr(cruisenr);
+        } else {
+            throw new BadRequestException("Cruisenr parameters must be set.");
+        }
+    }
+
+    /**
+     * Get data by id or cruise number.
+     *
+     * @return Response object.
+     */
+    @PerformanceLogging
+    @RequestMapping(value = "/find", method = RequestMethod.HEAD)
+    @ResponseBody
+    public void find(HttpServletResponse httpServletResponse, @RequestParam(value = "cruisenr", required = false) String cruisenr) {
+        LOGGER.info("Start BioticController.find");
+        if (nmdBioticService.hasDataByCruiseNr(cruisenr)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

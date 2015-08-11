@@ -42,4 +42,14 @@ public class NMDBioticServiceImpl implements NMDBioticService {
         return nmdDataDao.hasData(missiontype, year, platform, delivery);
     }
 
+    @Override
+    public Object getDataByCruiseNr(String cruisenr) {
+        return nmdDataDao.getByCruiseNr(MissionType.class, cruisenr);
+    }
+
+    @Override
+    public boolean hasDataByCruiseNr(String cruisenr) {
+        return nmdDataDao.hasDataByCruiseNr(cruisenr);
+    }
+
 }

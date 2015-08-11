@@ -9,11 +9,9 @@ import no.imr.framework.logging.logback.initalize.InitalizeLogbackHandler;
 import no.imr.framework.logging.slf4j.exceptions.LoggerInitalizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
 /**
  * Initalize application with dispatcher servlet.
