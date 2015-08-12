@@ -13,18 +13,21 @@
     <!-- Application config -->
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.config" />
 
-    <!-- NMDEchosounder controllers -->
+    <!-- NMDBiotic controllers -->
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.controller" />
-    <!-- Security -->
-    <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.security.access.voters" />
 
     <!-- S2D Service layers -->
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.service.config" />
 
     <!-- S2D dao layers -->
-    <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.dao.config" />
     <context:component-scan base-package="no.imr.nmdapi.dao.file.config" />
+
     <!-- Error handling advice -->
-    <context:component-scan base-package="no.imr.nmdapi.common.advice" />
+    <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.advices" />
+
+    <!-- Security -->
+    <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.security.access.voters" />
+
+
 
 </beans>

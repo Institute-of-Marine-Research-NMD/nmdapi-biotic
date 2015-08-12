@@ -97,7 +97,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         JAXBHttpMessageConverter converter = null;
         try {
             converter = new JAXBHttpMessageConverter(new ResponseNamespacePrefixMapper(),
-                    "no.imr.nmdapi.generic.nmdbiotic.domain.v1");
+                    "no.imr.nmdapi.generic.response.v1");
         } catch (JAXBException ex) {
             LOGGER.error("Error creating message converter.", ex);
         }
