@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<missions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imr.no/formats/nmdbiotic/v1" xsi:schemaLocation="http://www.imr.no/formats/nmdbiotic/v1 nmdbioticv1.xsd">
+<mission year="" missiontype="4" missiontypename="Forskningsfartøy" callsignal="LMEL" platform="4174" missionnumber="">
+   <cruise>2013101</cruise>
+    <startdate>19/01/2013</startdate>
+    <stopdate>21/02/2013</stopdate>
+    <purpose>IBTS koordineres av ICES og brukes til bestandsberegning. Toktet dekker Nordsjøen og Skagerrak (utenom Kategatt). Trålindekser for flere bunnfiskarter og indeks for sildelarver. Prosesstudier på fiskelarver. Trålkalibrering. Snitt: Utsira-W</purpose>
+  <fishstation serialno="10001">
+    <nation>58</nation>
+    <platform>4174</platform>
+    <station>9999</station>
+    <startdate>19/10/2013</startdate>
+    <starttime>09:02:00</starttime>
+    <stopdate>19/10/2013</stopdate>
+    <stoptime>09:25:00</stoptime>
+    <stationtype>H</stationtype>
+    <latitudestart>-89.99</latitudestart>
+    <longitudestart>-179.99</longitudestart>
+    <latitudeend>-89.99</latitudeend>
+    <longitudeend>-179.99</longitudeend>
+    <system>9</system>
+    <area>99</area>
+    <location>999</location>
+    <bottomdepthstart>9999.0</bottomdepthstart>
+    <bottomdepthstop>9999.0</bottomdepthstop>
+    <fishingdepthmax>1990.0</fishingdepthmax>
+    <fishingdepthmin>8999.0</fishingdepthmin>
+    <fishingdepthmean>4000.0</fishingdepthmean>
+    <gearno>99</gearno>
+    <gear>1000</gear>
+    <gearcount>99</gearcount>
+    <direction>350.0</direction>
+    <gearspeed>9.9</gearspeed>
+    <startlog>999.9</startlog>
+    <stoplog>999.9</stoplog>
+    <distance>99.9</distance>
+    <gearcondition>7</gearcondition>
+    <trawlquality>8</trawlquality>
+    <trawlopening>99.9</trawlopening>
+    <trawlopeningsd>9.9</trawlopeningsd>
+    <doorspread>99.9</doorspread>
+    <doorspreadsd>9.9</doorspreadsd>
+    <wirelength>9999</wirelength>
+    <fishabundance>1</fishabundance>
+    <fishdistribution>1</fishdistribution>
+    <fishingground>100</fishingground>
+    <countofvessels>2</countofvessels>
+    <dataquality>2</dataquality>
+    <comment>test</comment>
+    <catchsample samplenumber="9" species="161722.G03" noname="sild'G03" aphia="126417">
+      <sampletype>93</sampletype>
+      <group>52</group>
+      <conservation>5</conservation>
+      <producttype>1</producttype>
+      <weight>9999999.0</weight>
+      <volume>2.0</volume>
+      <count>999000</count>
+      <sampleproducttype>1</sampleproducttype>
+      <lengthmeasurement>R</lengthmeasurement>
+      <lengthsampleweight>999999.0</lengthsampleweight>
+      <lengthsamplevolume>2.0</lengthsamplevolume>
+      <lengthsamplecount>9000</lengthsamplecount>
+      <specimensamplecount>1</specimensamplecount>
+      <raisingfactor>1.5</raisingfactor>
+      <agingstructure>6</agingstructure>
+      <parasite>2</parasite>
+      <stomach>8</stomach>
+      <genetics>7</genetics>
+      <foreignobject>2</foreignobject>
+      <comment>Test</comment>
+      <individual specimenno="1">
+        <producttype>1</producttype>
+        <weight>99.99</weight>
+        <volume>2.0</volume>
+        <lengthunit>7</lengthunit>
+        <length>0.0999</length>
+        <fat>4</fat>
+        <sex>1</sex>
+        <stage>5</stage>
+        <specialstage>8</specialstage>
+        <eggstage>1</eggstage>
+        <moultingstage>1</moultingstage>
+        <stomachfillfield>6</stomachfillfield>
+        <stomachfilllab>3</stomachfilllab>
+        <digestion>5</digestion>
+        <liver>4</liver>
+        <liverparasite>5</liverparasite>
+        <gillworms>2</gillworms>
+        <swollengills>2</swollengills>
+        <fungusheart>1</fungusheart>
+        <fungusspores>1</fungusspores>
+        <fungusouter>1</fungusouter>
+        <blackspot>2</blackspot>
+        <vertebrae>99</vertebrae>
+        <gonadweight>9.999</gonadweight>
+        <liverweight>9.999</liverweight>
+        <stomachweight>9.999</stomachweight>
+        <diameter>0.01</diameter>
+        <mantlelength>0.01</mantlelength>
+        <carapacelength>0.01</carapacelength>
+        <headlength>0.01</headlength>
+        <snouttoendoftail>0.01</snouttoendoftail>
+        <snouttoendsqueezed>0.01</snouttoendsqueezed>
+        <snouttoanalfin>0.01</snouttoanalfin>
+        <snouttodorsalfin>0.01</snouttodorsalfin>
+        <forklength>0.01</forklength>
+        <snouttoboneknob>0.01</snouttoboneknob>
+        <lengthwithouthead>0.01</lengthwithouthead>
+        <carapacewidth>0.01</carapacewidth>
+        <rightclawwidth>0.01</rightclawwidth>
+        <rightclawlength>0.01</rightclawlength>
+        <meroswidth>0.01</meroswidth>
+        <meroslength>0.01</meroslength>
+        <japanesecut>0.01</japanesecut>
+        <comment>Test</comment>
+        <agedetermination no="1">
+          <age>99</age>
+          <spawningage>99</spawningage>
+          <spawningzones>99</spawningzones>
+          <readability>6</readability>
+          <otolithtype>4</otolithtype>
+          <otolithedge>4</otolithedge>
+          <otolithcentre>2</otolithcentre>
+          <calibration>99</calibration>
+          <growthzone1>99</growthzone1>
+          <growthzone2>99</growthzone2>
+          <growthzone3>99</growthzone3>
+          <growthzone4>99</growthzone4>
+          <growthzone5>99</growthzone5>
+          <growthzone6>99</growthzone6>
+          <growthzone7>99</growthzone7>
+          <growthzone8>99</growthzone8>
+          <growthzone9>99</growthzone9>
+          <growthzonestotal>99</growthzonestotal>
+        </agedetermination>
+        <tag tagno="999999">
+          <tagtype>2</tagtype>
+        </tag>
+      </individual>
+      <prey fishno="1" species="85272" partno="1">
+        <digestion>5</digestion>
+        <totalcount>9999</totalcount>
+        <weightresolution>1</weightresolution>
+        <totalweight>999999.0</totalweight>
+        <devstage>C</devstage>
+        <lengthmeasurement>R</lengthmeasurement>
+        <copepodedevstage copepodedevstage="1">
+          <count>99</count>
+        </copepodedevstage>
+      </prey>
+      <prey fishno="1" species="85272" partno="2">
+        <digestion>5</digestion>
+        <totalcount>9999</totalcount>
+        <weightresolution>1</weightresolution>
+        <totalweight>999999.0</totalweight>
+        <interval>1</interval>
+        <lengthmeasurement>R</lengthmeasurement>
+        <preylength length="0.01">
+          <count>99</count>
+        </preylength>
+      </prey>
+    </catchsample>
+  </fishstation>
+</mission>
+</missions>

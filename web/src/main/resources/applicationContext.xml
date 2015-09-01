@@ -28,6 +28,4 @@
     <!-- Security -->
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.security.access.voters" />
 
-
-
 </beans>
