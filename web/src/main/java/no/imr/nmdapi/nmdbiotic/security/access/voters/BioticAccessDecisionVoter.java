@@ -63,7 +63,9 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
             } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
                 Collection<String> auths = getAuths(auth.getAuthorities());
                 String[] args = obj.getRequestUrl().split("/");
-                if (datasetDao.hasReadAccess(auths, "biotic", "data", args[1], args[2], args[3], args[4])) {
+                if (args.length != 5) {
+                    return ACCESS_GRANTED;
+                } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[1], args[2], args[3], args[4])) {
                     return ACCESS_GRANTED;
                 } else {
                     return ACCESS_DENIED;
