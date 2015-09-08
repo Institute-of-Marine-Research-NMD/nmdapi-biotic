@@ -30,7 +30,7 @@ public class NMDBioticServiceImpl implements NMDBioticService {
 
     @Override
     public Object getData(final String missiontype, final String year, final String platform, final String delivery) {
-        return nmdDatasetDao.get(TYPE, DATASET_NAME, MissionType.class.getPackage().getName(), missiontype, year, platform, delivery);
+        return nmdDatasetDao.get(TYPE, DATASET_NAME, missiontype, year, platform, delivery);
     }
 
     @Override
@@ -59,12 +59,12 @@ public class NMDBioticServiceImpl implements NMDBioticService {
 
     @Override
     public Object getDataByCruiseNr(final String cruisenr) {
-        return nmdDatasetDao.getByCruisenr(TYPE, DATASET_NAME, MissionType.class.getPackage().getName(), cruisenr);
+        return nmdDatasetDao.getByCruisenr(TYPE, DATASET_NAME, cruisenr);
     }
 
     @Override
     public boolean hasDataByCruiseNr(final String cruisenr) {
-        return nmdDatasetDao.hasDataByCruisenr(TYPE, DATASET_NAME, MissionType.class.getPackage().getName(), cruisenr);
+        return nmdDatasetDao.hasDataByCruisenr(TYPE, DATASET_NAME, cruisenr);
     }
 
 }

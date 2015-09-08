@@ -44,6 +44,7 @@ public class TestBioticAccessDecisionVoterNoAuth {
             cfg.addProperty("pre.data.dir", System.getProperty("java.io.tmpdir"));
             cfg.addProperty("default.writerole", "SG-WRITE-BIOTIC");
             cfg.addProperty("default.readrole", "unrestricted");
+            cfg.addProperty("app.packages", "no.imr.nmdapi.generic.nmdbiotic.domain.v1:no.imr.nmd.commons.dataset.jaxb");
             return cfg;
         }
     }
