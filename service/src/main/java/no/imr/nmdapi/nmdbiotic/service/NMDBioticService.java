@@ -1,9 +1,6 @@
 package no.imr.nmdapi.nmdbiotic.service;
 
-import no.imr.nmd.commons.dataset.jaxb.DatasetType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
-
-
 
 /**
  * Service API for mission data.
@@ -78,27 +75,6 @@ public interface NMDBioticService {
      * @return
      */
     boolean hasDataByCruiseNr(String cruisenr);
-
-     /**
-     *
-     * @param missiontype
-     * @param year
-     * @param platform
-     * @param delivery
-     * @return
-     */
-    DatasetType getDataset(String missiontype, String year, String platform, String delivery);
-
-    /**
-     * Update dataset information.
-     *
-     * @param missiontype
-     * @param year
-     * @param platform
-     * @param delivery
-     * @param dataset
-     */
-    void updateDataset(String missiontype, String year, String platform, String delivery, DatasetType dataset);
 
     /**
      *
