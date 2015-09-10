@@ -151,6 +151,7 @@
                         <version>2.1</version>
                         <configuration>
                             <path>/apis/nmdapi/biotic/v1</path>
+                            <uriEncoding>UTF-8</uriEncoding>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -207,6 +208,7 @@
                         <configuration>
                             <path>/apis/nmdapi/cruise/v1</path>
                             <port>10112</port>
+                            <uriEncoding>UTF-8</uriEncoding>
                         </configuration>
                         <executions>
                             <execution>

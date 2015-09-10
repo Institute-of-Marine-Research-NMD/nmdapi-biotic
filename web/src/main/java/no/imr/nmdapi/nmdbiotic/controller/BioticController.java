@@ -2,6 +2,7 @@ package no.imr.nmdapi.nmdbiotic.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
+import no.imr.nmd.commons.dataset.jaxb.DatasetType;
 import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
@@ -44,7 +45,10 @@ public class BioticController {
     /**
      * Get biotic data for mission.
      *
-     * @param mission
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
      * @return Response object.
      */
     @PerformanceLogging
@@ -59,7 +63,10 @@ public class BioticController {
     /**
      * Delete biotic data for mission.
      *
-     * @param mission
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
      */
     @PerformanceLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.DELETE)
@@ -88,11 +95,9 @@ public class BioticController {
         nmdBioticService.insertData(missiontype, year, platform, delivery, data);
     }
 
-     /**
+    /**
      * insert biotic data for mission.
      *
-     * @param mission
-     * @param bioticDatasetType
      */
     @PerformanceLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.PUT)
@@ -103,6 +108,59 @@ public class BioticController {
         nmdBioticService.updateData(missiontype, year, platform, delivery, missionType);
     }
 
+    /**
+     * insert biotic data for mission.
+     *
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
+     * @param dataset
+     */
+    @PerformanceLogging
+    @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}/dataset", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void updateDataset(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery, @RequestBody DatasetType dataset) {
+        LOGGER.info("Start BioticController.updateDataset");
+        nmdBioticService.updateDataset(missiontype, year, platform, delivery, dataset);
+    }
+
+    /**
+     * insert biotic data for mission.
+     *
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
+     * @return
+     */
+    @PerformanceLogging
+    @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}/dataset", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public DatasetType getDataset(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {
+        LOGGER.info("Start BioticController.getDataset");
+        return nmdBioticService.getDataset(missiontype, year, platform, delivery);
+    }
+
+    /**
+     * Get namepsace for data.
+     *
+     * @param missiontype
+     * @param year
+     * @param platform
+     * @param delivery
+     * @return
+     */
+    @PerformanceLogging
+    @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}/info", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object getInfo(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {
+        LOGGER.info("Start BioticController.getInfo");
+        return nmdBioticService.getInfo(missiontype, year, platform, delivery);
+    }
 
     /**
      * Does the mission have data
@@ -111,7 +169,6 @@ public class BioticController {
      * @param year
      * @param platform
      * @param delivery
-     * @return
      */
     @PerformanceLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.HEAD)
@@ -129,6 +186,7 @@ public class BioticController {
     /**
      * Get data by id or cruise number.
      *
+     * @param cruisenr
      * @return Response object.
      */
     @PerformanceLogging
@@ -147,7 +205,8 @@ public class BioticController {
     /**
      * Get data by id or cruise number.
      *
-     * @return Response object.
+     * @param httpServletResponse
+     * @param cruisenr
      */
     @PerformanceLogging
     @RequestMapping(value = "/find", method = RequestMethod.HEAD)
