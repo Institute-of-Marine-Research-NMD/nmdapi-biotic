@@ -2,7 +2,6 @@ package no.imr.nmdapi.nmdbiotic.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
-import no.imr.nmd.commons.dataset.jaxb.DatasetType;
 import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
