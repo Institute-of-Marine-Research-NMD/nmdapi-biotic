@@ -14,7 +14,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-<build>
+    <build>
         <finalName>apis#nmdapi#biotic#v1</finalName>
         <plugins>
             <plugin>
@@ -85,9 +85,9 @@
             <version>1.0.2</version>
         </dependency>
         <dependency>
-    <groupId>no.imr.nmd.commons.jaxb</groupId>
-    <artifactId>commons-jaxb</artifactId>
-    <version>0.0.1</version>
+            <groupId>no.imr.nmd.commons.jaxb</groupId>
+            <artifactId>commons-jaxb</artifactId>
+            <version>0.0.7</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

@@ -86,43 +86,59 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
     @Override
     public int vote(Authentication auth, FilterInvocation obj, Collection<ConfigAttribute> confAttrs) {
         if (obj.getFullRequestUrl().contains(BioticController.BIOTIC_URL)) {
-            if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
-                if (auth.isAuthenticated() && auth.getAuthorities().contains(new SimpleGrantedAuthority(configuration.getString("default.writerole")))) {
-                    LOGGER.info(GRANTED);
-                    return ACCESS_GRANTED;
-                } else {
-                    LOGGER.info(DENIED);
-                    return ACCESS_DENIED;
-                }
-            } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.PUT.name()) || obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.DELETE.name())) {
-                Collection<String> auths = getAuths(auth.getAuthorities());
-                String[] args = obj.getRequestUrl().split("/");
-                if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
-                    LOGGER.info(GRANTED);
-                    return ACCESS_GRANTED;
-                } else {
-                    LOGGER.info(DENIED);
-                    return ACCESS_DENIED;
-                }
-            } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
-                Collection<String> auths = getAuths(auth.getAuthorities());
-                String[] args = obj.getRequestUrl().split("/");
-                if (args.length != FULL_PATH_ARG_LENGTH) {
-                    LOGGER.info(GRANTED);
-                    return ACCESS_GRANTED;
-                } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
-                    return ACCESS_GRANTED;
-                } else {
-                    LOGGER.info(DENIED);
-                    return ACCESS_DENIED;
-                }
-            } else {
-                LOGGER.info(GRANTED);
-                return ACCESS_GRANTED;
-            }
+            return checkAccess(obj, auth);
         } else {
             LOGGER.info(ABSTAINED);
             return ACCESS_ABSTAIN;
+        }
+    }
+
+    private int checkAccess(FilterInvocation obj, Authentication auth) {
+        if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
+            return checkAccessInsert(auth);
+        } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.PUT.name()) || obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.DELETE.name())) {
+            return checkAccessUpdate(auth, obj);
+        } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
+            return checkAccessGet(auth, obj);
+        } else {
+            LOGGER.info(GRANTED);
+            return ACCESS_GRANTED;
+        }
+    }
+
+    private int checkAccessGet(Authentication auth, FilterInvocation obj) {
+        Collection<String> auths = getAuths(auth.getAuthorities());
+        String[] args = obj.getRequestUrl().split("/");
+        if (args.length != FULL_PATH_ARG_LENGTH) {
+            LOGGER.info(GRANTED);
+            return ACCESS_GRANTED;
+        } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
+            return ACCESS_GRANTED;
+        } else {
+            LOGGER.info(DENIED);
+            return ACCESS_DENIED;
+        }
+    }
+
+    private int checkAccessUpdate(Authentication auth, FilterInvocation obj) {
+        Collection<String> auths = getAuths(auth.getAuthorities());
+        String[] args = obj.getRequestUrl().split("/");
+        if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
+            LOGGER.info(GRANTED);
+            return ACCESS_GRANTED;
+        } else {
+            LOGGER.info(DENIED);
+            return ACCESS_DENIED;
+        }
+    }
+
+    private int checkAccessInsert(Authentication auth) {
+        if (auth.isAuthenticated() && auth.getAuthorities().contains(new SimpleGrantedAuthority(configuration.getString("default.writerole")))) {
+            LOGGER.info(GRANTED);
+            return ACCESS_GRANTED;
+        } else {
+            LOGGER.info(DENIED);
+            return ACCESS_DENIED;
         }
     }
 

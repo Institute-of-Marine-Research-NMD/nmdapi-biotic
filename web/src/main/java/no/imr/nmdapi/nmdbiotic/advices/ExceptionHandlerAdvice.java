@@ -79,7 +79,22 @@ public class ExceptionHandlerAdvice {
         return element;
     }
 
-
+    /**
+     * If marshall unmarshall fails then return bad request.
+     *
+     * @param ex    Exception.
+     * @return      Error message.
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorElementType handleException(final ConversionException ex) {
+        LOGGER.info("Bad request.", ex);
+        ErrorElementType element = new ErrorElementType();
+        element.setErrorcode(BigInteger.valueOf(HttpStatus.BAD_REQUEST.value()));
+        element.setMessage("Bad request: " + ex.getMessage());
+        return element;
+    }
 
     /**
      * If application fails or unknown error then return 500.
@@ -95,23 +110,6 @@ public class ExceptionHandlerAdvice {
         ErrorElementType element = new ErrorElementType();
         element.setErrorcode(BigInteger.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
         element.setMessage("Application error. Send mail to datahjelp@imr.no.");
-        return element;
-    }
-
-    /**
-     * If marshall unmarshall fails then return bad request.
-     *
-     * @param ex    Exception.
-     * @return      Error message.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorElementType handleException(final ConversionException ex) {
-        LOGGER.info("Bad request.", ex);
-        ErrorElementType element = new ErrorElementType();
-        element.setErrorcode(BigInteger.valueOf(HttpStatus.BAD_REQUEST.value()));
-        element.setMessage("Bad request: " + ex.getMessage());
         return element;
     }
 

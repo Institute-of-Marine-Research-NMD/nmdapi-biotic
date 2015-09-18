@@ -33,7 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author kjetilf
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CommonDaoConfig.class, Init.class, BioticAccessDecisionVoter.class})
+@ContextConfiguration(classes = { CommonDaoConfig.class, Init.class, BioticAccessDecisionVoter.class})
 public class TestBioticAccessDecisionVoterNoAuth {
 
     @org.springframework.context.annotation.Configuration
