@@ -42,12 +42,6 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private List<AccessDecisionVoter<? extends Object>> accessDecisionVoters;
 
-    /**
-     * Application properties.
-     */
-    @Autowired
-    private org.apache.commons.configuration.Configuration configuration;
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId("microsoft:identityserver:Oauth");
@@ -60,27 +54,37 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
     }
 
     @Bean
-    public DefaultTokenServices tokenServices() throws IOException, CertificateException, InvalidKeyException {
+    public DefaultTokenServices tokenServices() {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(tokenStore());
         return tokenServices;
     }
 
     @Bean
-    public TokenEnhancer tokenEnhancer() throws IOException, CertificateException, InvalidKeyException {
-        TokenEnhancer enhancer = new JwtAccessTokenConverter("keys/fs.cer");
+    public TokenEnhancer tokenEnhancer() {
+        TokenEnhancer enhancer = null;
+        try {
+             enhancer = new JwtAccessTokenConverter("keys/fs.cer");
+            return enhancer;
+        } catch (IOException | CertificateException | InvalidKeyException ex) {
+            LOGGER.error("Error init tokenenhancer", ex);
+        }
         return enhancer;
     }
 
     @Bean(name = "tokenStore")
-    public TokenStore tokenStore() throws IOException, CertificateException, InvalidKeyException {
-        TokenStore store = new JwtTokenStore(accessTokenConverter());
-        return store;
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
     }
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() throws IOException, CertificateException, InvalidKeyException {
-        JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter("keys/fs.cer");
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter accessTokenConverter = null;
+        try {
+            accessTokenConverter = new JwtAccessTokenConverter("keys/fs.cer");
+        } catch (IOException | CertificateException | InvalidKeyException ex) {
+            LOGGER.error("Error init accessTokenConverter", ex);
+        }
         return accessTokenConverter;
     }
 }
