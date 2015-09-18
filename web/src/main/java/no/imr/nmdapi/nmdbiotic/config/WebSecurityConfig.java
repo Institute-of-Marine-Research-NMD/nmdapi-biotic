@@ -53,6 +53,11 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
         http.anonymous().authorities("ANONYMOUS");
     }
 
+    /**
+     * Inialize token services.
+     *
+     * @return
+     */
     @Bean
     public DefaultTokenServices tokenServices() {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
@@ -60,6 +65,11 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
         return tokenServices;
     }
 
+    /**
+     * Initialize token for converting jwt to oauth info.
+     *
+     * @return
+     */
     @Bean
     public TokenEnhancer tokenEnhancer() {
         TokenEnhancer enhancer = null;
@@ -72,11 +82,22 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
         return enhancer;
     }
 
+    /**
+     * Initalize tokenstore. This tokenstore does not store the tokens as they are
+     *  signed jwt tokens.
+     *
+     * @return
+     */
     @Bean(name = "tokenStore")
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
+    /**
+     * Conversion of token.
+     *
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = null;
