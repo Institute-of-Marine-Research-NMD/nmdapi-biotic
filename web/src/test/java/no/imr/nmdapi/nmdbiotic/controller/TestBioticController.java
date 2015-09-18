@@ -2,6 +2,7 @@ package no.imr.nmdapi.nmdbiotic.controller;
 
 import java.io.File;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
 import org.apache.commons.io.FileUtils;
@@ -52,7 +53,7 @@ public class TestBioticController {
 
     @Test
     public void testFindByMission() throws Exception {
-        MissionType missionType = (MissionType)JAXBContext.newInstance("no.imr.nmdapi.generic.nmdbiotic.domain.v1").createUnmarshaller().unmarshal(Thread.currentThread().getContextClassLoader().getResource("4-2015-4174-1.xml"));
+        MissionType missionType = (MissionType) ((JAXBElement)JAXBContext.newInstance("no.imr.nmdapi.generic.nmdbiotic.domain.v1").createUnmarshaller().unmarshal(Thread.currentThread().getContextClassLoader().getResource("4-2015-4174-1.xml"))).getValue();
         doReturn(missionType).when(mockBioticService).getData(any(String.class), any(String.class), any(String.class), any(String.class));
         mockMvc.perform(get("/Forskningsfartøy/2014/Johan%20Hjort-LDGJ/2014201"))
                 .andExpect(status().isOk());
