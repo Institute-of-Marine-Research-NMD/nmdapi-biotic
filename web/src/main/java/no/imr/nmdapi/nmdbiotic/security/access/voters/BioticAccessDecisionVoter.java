@@ -5,6 +5,8 @@ import java.util.HashSet;
 import no.imr.nmdapi.dao.file.NMDDatasetDao;
 import no.imr.nmdapi.nmdbiotic.controller.BioticController;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -26,6 +28,44 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvocation> {
+    /**
+     * Class logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(BioticAccessDecisionVoter.class);
+
+    /**
+     * How long is the expected path when all arguments.
+     */
+    private static final int FULL_PATH_ARG_LENGTH = 5;
+    /**
+     * Argument number for delivery after split.
+     */
+    private static final int DELIVERY_PATH = 4;
+    /**
+     * Argument number for platform after split.
+     */
+    private static final int PLATFORM_PATH = 3;
+    /**
+     * Argument number for year after split.
+     */
+    private static final int YEAR_PATH = 2;
+    /**
+     * Argument number for mission type after split.
+     */
+    private static final int MISSIONTYPE_PATH = 1;
+
+    /**
+     * Denied string literal.
+     */
+    private static final String DENIED = "Denied";
+    /**
+     * Granted string literal.
+     */
+    private static final String GRANTED = "Granted";
+    /**
+     * Abstained string literal.
+     */
+    private static final String ABSTAINED = "Abstained";
 
     @Autowired
     private NMDDatasetDao datasetDao;
@@ -48,33 +88,40 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
         if (obj.getFullRequestUrl().contains(BioticController.BIOTIC_URL)) {
             if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
                 if (auth.isAuthenticated() && auth.getAuthorities().contains(new SimpleGrantedAuthority(configuration.getString("default.writerole")))) {
+                    LOGGER.info(GRANTED);
                     return ACCESS_GRANTED;
                 } else {
+                    LOGGER.info(DENIED);
                     return ACCESS_DENIED;
                 }
             } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.PUT.name()) || obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.DELETE.name())) {
                 Collection<String> auths = getAuths(auth.getAuthorities());
                 String[] args = obj.getRequestUrl().split("/");
-                if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, "biotic", "data", args[1], args[2], args[3], args[4])) {
+                if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
+                    LOGGER.info(GRANTED);
                     return ACCESS_GRANTED;
                 } else {
+                    LOGGER.info(DENIED);
                     return ACCESS_DENIED;
                 }
             } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
                 Collection<String> auths = getAuths(auth.getAuthorities());
                 String[] args = obj.getRequestUrl().split("/");
-                if (args.length != 5) {
+                if (args.length != FULL_PATH_ARG_LENGTH) {
+                    LOGGER.info(GRANTED);
                     return ACCESS_GRANTED;
-                } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[1], args[2], args[3], args[4])) {
+                } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
                     return ACCESS_GRANTED;
                 } else {
+                    LOGGER.info(DENIED);
                     return ACCESS_DENIED;
                 }
             } else {
+                LOGGER.info(GRANTED);
                 return ACCESS_GRANTED;
             }
         } else {
-            // Not biotic data.
+            LOGGER.info(ABSTAINED);
             return ACCESS_ABSTAIN;
         }
     }
