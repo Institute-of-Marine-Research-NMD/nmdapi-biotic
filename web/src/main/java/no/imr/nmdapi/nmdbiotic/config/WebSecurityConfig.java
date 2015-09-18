@@ -24,6 +24,11 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+/**
+ * Initializes the web security and it's components.
+ *
+ * @author kjetilf
+ */
 @Configuration
 @EnableWebMvcSecurity
 @EnableResourceServer
