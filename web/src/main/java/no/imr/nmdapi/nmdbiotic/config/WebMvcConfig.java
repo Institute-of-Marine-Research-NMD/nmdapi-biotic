@@ -1,6 +1,7 @@
 package no.imr.nmdapi.nmdbiotic.config;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.net.URL;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import no.imr.nmdapi.common.jaxb.converters.JAXBHttpMessageConverter;
@@ -59,7 +60,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(getMappingJacksonHttpMessageConverter());
-        converters.add(getEchoMappingJaxBHttpMessageConverter());
+        converters.add(getBioticMappingJaxBHttpMessageConverter());
         converters.add(getResponseMappingJaxBHttpMessageConverter());
     }
 
@@ -82,10 +83,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
      * @return The xml converter.
      */
     @Bean(name = "jaxbMissionMessageConverter")
-    public HttpMessageConverter getEchoMappingJaxBHttpMessageConverter() {
+    public HttpMessageConverter getBioticMappingJaxBHttpMessageConverter() {
         JAXBHttpMessageConverter converter = null;
         try {
-            converter = new JAXBHttpMessageConverter(new BioticNamespacePrefixMapper(), false,
+            URL schemaFile = Thread.currentThread().getContextClassLoader().getResource("biotic.xsd");
+            converter = new JAXBHttpMessageConverter(new BioticNamespacePrefixMapper(), false, schemaFile,
                     "no.imr.nmdapi.generic.nmdbiotic.domain.v1");
         } catch (JAXBException ex) {
             LOGGER.error("Error creating message converter.", ex);
