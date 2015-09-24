@@ -128,6 +128,7 @@ public class BioticController {
     /**
      * Does the mission have data
      *
+     * @param httpServletResponse
      * @param missiontype
      * @param year
      * @param platform
@@ -136,13 +137,12 @@ public class BioticController {
     @PerformanceLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.HEAD)
     @ResponseBody
-    public void  hasData(HttpServletResponse httpServletResponse,@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {
+    public void hasData(HttpServletResponse httpServletResponse, @PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {
         LOGGER.info("Start BioticController.hasData");
-        if (nmdBioticService.hasData(missiontype, year, platform, delivery)){
-           httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-
+        if (nmdBioticService.hasData(missiontype, year, platform, delivery)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         } else {
-         httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

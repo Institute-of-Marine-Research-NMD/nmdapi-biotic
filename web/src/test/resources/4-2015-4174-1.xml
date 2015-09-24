@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mission year="2013" missiontype="4" missiontypename="Forskningsfartøy" callsignal="LMEL" platform="4174" missionnumber="1" xmlns="http://www.imr.no/formats/nmdbiotic/v1">
     <cruise>2013101</cruise>
-    <test>fdfd</test>
     <startdate>19/01/2013</startdate>
     <stopdate>21/02/2013</stopdate>
     <purpose>IBTS koordineres av ICES og brukes til bestandsberegning. Toktet dekker Nordsjøen og Skagerrak (utenom Kategatt). Trålindekser for flere bunnfiskarter og indeks for sildelarver. Prosesstudier på fiskelarver. Trålkalibrering. Snitt: Utsira-W</purpose>
