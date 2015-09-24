@@ -51,7 +51,7 @@ public class BioticController {
      * @return Response object.
      */
     @PerformanceLogging
-    @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object findByMission(@PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {

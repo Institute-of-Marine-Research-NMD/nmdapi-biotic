@@ -1,7 +1,6 @@
 package no.imr.nmdapi.nmdbiotic.controller;
 
 import java.io.File;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
@@ -10,7 +9,6 @@ import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
 import org.apache.commons.io.FileUtils;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.XMLUnit;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
