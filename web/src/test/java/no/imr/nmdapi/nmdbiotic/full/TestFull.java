@@ -1,15 +1,10 @@
 package no.imr.nmdapi.nmdbiotic.full;
 
 import java.io.File;
-import java.io.StringReader;
 import no.imr.nmdapi.nmdbiotic.controller.BioticController;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
-import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.XMLUnit;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +17,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
-import org.xml.sax.InputSource;
 
 /**
  * These tests test the entire application except security.
@@ -102,10 +94,26 @@ public class TestFull {
         // Verify that data is there.
         String updatedFile = FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1_2.xml").getFile()), "UTF-8");
         mockMvc.perform(get("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201").characterEncoding("UTF-8")).andExpect(status().isOk()).andExpect(content().xml(updatedFile));
+
+        //Test get information
+        mockMvc.perform(get("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201?type=info").characterEncoding("UTF-8")).andExpect(status().isOk()).andDo(print());
+
         //Delete data.
         mockMvc.perform(delete("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201").characterEncoding("UTF-8")).andExpect(status().isOk());
         //Get data and verify that nothing is there.
         mockMvc.perform(get("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201").characterEncoding("UTF-8")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testFailure() throws Exception {
+        //Insert data.
+        mockMvc.perform(
+                post("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201")
+                .contentType(MediaType.APPLICATION_XML)
+                .characterEncoding("UTF-8")
+                .content(FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1_failure.xml").getFile()), "UTF-8"))
+                )
+                .andExpect(status().isBadRequest());
     }
 
 }
