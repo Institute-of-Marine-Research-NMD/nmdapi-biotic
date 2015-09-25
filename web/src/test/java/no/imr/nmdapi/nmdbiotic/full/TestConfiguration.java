@@ -20,7 +20,7 @@ public class TestConfiguration {
         configuration.setProperty("default.readrole", "unrestricted");
         configuration.setProperty("default.writerole", "SG-FAG-WRITE");
         configuration.setProperty("default.owner", "imr");
-        configuration.setProperty("app.packages", "no.imr.nmd.commons.dataset.jaxb:no.imr.nmd.commons.cruiseseries.domain.v1");
+        configuration.setProperty("app.packages", "no.imr.nmd.commons.dataset.jaxb:no.imr.nmdapi.generic.nmdbiotic.domain.v1");
         configuration.setProperty("admin.role", "SG-FAG-430-NMD");
         return configuration;
     }

@@ -14,6 +14,10 @@
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.config">
         <context:exclude-filter type="regex" expression="..ApplicationConfig"/>
     </context:component-scan>
+
+    <!-- Test configuration -->
+    <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.full" />
+
     <!-- NMDBiotic controllers -->
     <context:component-scan base-package="no.imr.nmdapi.nmdbiotic.controller" />
 
