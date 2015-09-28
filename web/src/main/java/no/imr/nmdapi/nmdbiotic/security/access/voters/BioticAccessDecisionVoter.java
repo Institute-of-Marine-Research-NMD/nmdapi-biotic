@@ -2,6 +2,7 @@ package no.imr.nmdapi.nmdbiotic.security.access.voters;
 
 import java.util.Collection;
 import java.util.HashSet;
+import no.imr.nmd.commons.dataset.jaxb.DataTypeEnum;
 import no.imr.nmdapi.dao.file.NMDDatasetDao;
 import no.imr.nmdapi.nmdbiotic.controller.BioticController;
 import org.apache.commons.configuration.Configuration;
@@ -112,7 +113,7 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
         if (args.length != FULL_PATH_ARG_LENGTH) {
             LOGGER.info(GRANTED);
             return ACCESS_GRANTED;
-        } else if (datasetDao.hasReadAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
+        } else if (datasetDao.hasReadAccess(auths, DataTypeEnum.BIOTIC, "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
             return ACCESS_GRANTED;
         } else {
             LOGGER.info(DENIED);
@@ -123,7 +124,7 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
     private int checkAccessUpdate(Authentication auth, FilterInvocation obj) {
         Collection<String> auths = getAuths(auth.getAuthorities());
         String[] args = obj.getRequestUrl().split("/");
-        if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, "biotic", "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
+        if (auth.isAuthenticated() && datasetDao.hasWriteAccess(auths, DataTypeEnum.BIOTIC, "data", args[MISSIONTYPE_PATH], args[YEAR_PATH], args[PLATFORM_PATH], args[DELIVERY_PATH])) {
             LOGGER.info(GRANTED);
             return ACCESS_GRANTED;
         } else {

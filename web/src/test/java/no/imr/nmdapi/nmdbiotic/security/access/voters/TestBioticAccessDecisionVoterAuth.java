@@ -3,6 +3,7 @@ package no.imr.nmdapi.nmdbiotic.security.access.voters;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import no.imr.nmd.commons.dataset.jaxb.DataTypeEnum;
 import no.imr.nmdapi.dao.file.NMDDatasetDao;
 import no.imr.nmdapi.dao.file.config.CommonDaoConfig;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
@@ -79,10 +80,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testPostAuthMissingRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -122,10 +123,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testPutAuthMissingRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -147,10 +148,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testPutAuthHasRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -172,10 +173,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testDeleteAuthMissingRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -197,10 +198,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testDeleteAuthHasRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -222,10 +223,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testGetAuthUnrestricted() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -247,10 +248,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testGetAuthMissingRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "SG-READ", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "SG-READ", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -272,10 +273,10 @@ public class TestBioticAccessDecisionVoterAuth {
     @Test
     public void testGetAuthHasRole() {
         MissionType mission = new MissionType();
-        if (datasetDao.hasData("biotic", "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
-            datasetDao.delete("biotic", "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "SG-READ", "imr", "biotic", "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert("SG-WRITE", "SG-READ", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.TRUE).when(auth).isAuthenticated();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
