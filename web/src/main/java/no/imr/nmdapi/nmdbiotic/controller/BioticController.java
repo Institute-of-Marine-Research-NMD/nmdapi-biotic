@@ -1,5 +1,10 @@
 package no.imr.nmdapi.nmdbiotic.controller;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.BadRequestException;
@@ -156,10 +161,11 @@ public class BioticController {
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Object find(@RequestParam(value = "cruisenr", required = false) String cruisenr) {
+    public Object find(@RequestParam(value = "cruisenr", required = true) String cruisenr, @RequestParam(value = "shipname", required = true) String shipname, HttpServletRequest request) throws MalformedURLException, URISyntaxException {
         LOGGER.info("Start BioticController.find");
         if (cruisenr != null) {
-            return nmdBioticService.getDataByCruiseNr(cruisenr);
+            URI uri = (new URI(request.getRequestURL().toString())).resolve(".");
+            return nmdBioticService.getDataByCruiseNr(cruisenr, shipname, uri.toString());
         } else {
             throw new BadRequestException("Cruisenr parameters must be set.");
         }
@@ -174,9 +180,9 @@ public class BioticController {
     @PerformanceLogging
     @RequestMapping(value = "/find", method = RequestMethod.HEAD)
     @ResponseBody
-    public void find(HttpServletResponse httpServletResponse, @RequestParam(value = "cruisenr", required = false) String cruisenr) {
+    public void find(HttpServletResponse httpServletResponse, @RequestParam(value = "cruisenr", required = false) String cruisenr, @RequestParam(value = "shipname", required = true) String shipname) {
         LOGGER.info("Start BioticController.find");
-        if (nmdBioticService.hasDataByCruiseNr(cruisenr)) {
+        if (nmdBioticService.hasDataByCruiseNr(cruisenr, shipname)) {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         } else {
             httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);

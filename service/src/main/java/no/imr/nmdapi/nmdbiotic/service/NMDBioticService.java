@@ -65,16 +65,19 @@ public interface NMDBioticService {
     /**
      *
      * @param cruisenr
+     * @param shipname
+     * @param contextpath
      * @return
      */
-    Object getDataByCruiseNr(String cruisenr);
+    Object getDataByCruiseNr(String cruisenr, String shipname, String contextpath);
 
     /**
      *
      * @param cruisenr
+     * @param shipname
      * @return
      */
-    boolean hasDataByCruiseNr(String cruisenr);
+    boolean hasDataByCruiseNr(String cruisenr, String shipname);
 
     /**
      *
