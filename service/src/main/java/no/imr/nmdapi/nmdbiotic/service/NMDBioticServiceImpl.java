@@ -8,6 +8,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import no.imr.nmd.commons.dataset.jaxb.DataTypeEnum;
 import no.imr.nmd.commons.dataset.jaxb.QualityEnum;
 import no.imr.nmdapi.dao.file.NMDDatasetDao;
+import no.imr.nmdapi.exceptions.S2DException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.generic.response.v1.OptionKeyValueListType;
 import no.imr.nmdapi.generic.response.v1.OptionKeyValueType;
@@ -64,6 +65,7 @@ public class NMDBioticServiceImpl implements NMDBioticService {
             nmdDatasetDao.createDataset(writeRole, readRole, "", owner, QualityEnum.NONE, DataTypeEnum.BIOTIC, DATASET_NAME, now, missiontype, year, platform, delivery);
         } catch (DatatypeConfigurationException ex) {
             LOGGER.error("Error creating xml calendar", ex);
+            throw new S2DException("Error creating xml calendar", ex);
         }
     }
 
@@ -77,6 +79,7 @@ public class NMDBioticServiceImpl implements NMDBioticService {
             nmdDatasetDao.updateDataset(DataTypeEnum.BIOTIC, DATASET_NAME, now, missiontype, year, platform, delivery);
         } catch (DatatypeConfigurationException ex) {
             LOGGER.error("Error creating xml calendar", ex);
+            throw new S2DException("Error creating xml calendar", ex);
         }
     }
 
