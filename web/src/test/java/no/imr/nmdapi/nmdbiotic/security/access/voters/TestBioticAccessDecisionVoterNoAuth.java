@@ -3,6 +3,7 @@ package no.imr.nmdapi.nmdbiotic.security.access.voters;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import no.imr.nmd.commons.dataset.jaxb.DataTypeEnum;
+import no.imr.nmd.commons.dataset.jaxb.QualityEnum;
 import no.imr.nmdapi.dao.file.NMDDatasetDao;
 import no.imr.nmdapi.dao.file.config.CommonDaoConfig;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
@@ -162,7 +163,11 @@ public class TestBioticAccessDecisionVoterNoAuth {
         if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
             datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "unrestricted", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        if (datasetDao.hasDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.removeDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        }
+        datasetDao.insert(DataTypeEnum.BIOTIC, "data", mission, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.createDataset("SG-WRITE", "unrestricted", "", "imr", QualityEnum.NONE, DataTypeEnum.BIOTIC, "data", null, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.FALSE).when(auth).isAuthenticated();
         FilterInvocation filter = mock(FilterInvocation.class);
@@ -173,6 +178,7 @@ public class TestBioticAccessDecisionVoterNoAuth {
         when(filter.getRequestUrl()).thenReturn("/Forskningsfartøy/2015/G O Sars_LMEL/2015101");
         Collection<ConfigAttribute> confAttr = mock(Collection.class);
         assertEquals(ACCESS_GRANTED, bioticAccessDecisionVoter.vote(auth, filter, confAttr));
+        datasetDao.removeDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
     }
 
     /**
@@ -180,11 +186,16 @@ public class TestBioticAccessDecisionVoterNoAuth {
      */
     @Test
     public void testGetNoAuthNotUnrestricted() {
+        if (datasetDao.hasDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
+            datasetDao.removeDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        }
+
         MissionType mission = new MissionType();
         if (datasetDao.hasData(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101")) {
             datasetDao.delete(DataTypeEnum.BIOTIC, "data", true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         }
-        datasetDao.insert("SG-WRITE", "SG-READ", "imr", DataTypeEnum.BIOTIC, "data", mission, true, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.insert(DataTypeEnum.BIOTIC, "data", mission, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+        datasetDao.createDataset("SG-WRITE", "X", "", "imr", QualityEnum.NONE, DataTypeEnum.BIOTIC, "data", null, "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
         Authentication auth = mock(Authentication.class);
         doReturn(Boolean.FALSE).when(auth).isAuthenticated();
         FilterInvocation filter = mock(FilterInvocation.class);
@@ -195,6 +206,9 @@ public class TestBioticAccessDecisionVoterNoAuth {
         when(filter.getRequestUrl()).thenReturn("/Forskningsfartøy/2015/G O Sars_LMEL/2015101");
         Collection<ConfigAttribute> confAttr = mock(Collection.class);
         assertEquals(ACCESS_DENIED, bioticAccessDecisionVoter.vote(auth, filter, confAttr));
+        datasetDao.removeDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
+
+
     }
 
 }

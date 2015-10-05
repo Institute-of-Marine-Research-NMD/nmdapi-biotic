@@ -3,7 +3,6 @@ package no.imr.nmdapi.nmdbiotic.controller;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
