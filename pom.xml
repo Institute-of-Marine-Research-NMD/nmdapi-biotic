@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.imr.nmdapi.web</groupId>
         <artifactId>nmdapi-parent</artifactId>
-        <version>0.0.7</version>
+        <version>0.0.9</version>
     </parent>
     <groupId>no.imr.nmdapi.biotic</groupId>
     <artifactId>parent</artifactId>
@@ -29,7 +29,7 @@
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jaxb.version>2.1.17</jaxb.version>
+        <jaxb.version>2.2.11</jaxb.version>
     </properties>
 
     <dependencies>
@@ -46,7 +46,8 @@
         <dependency>
             <groupId>no.imr.nmd.commons.biotic.jaxb</groupId>
             <artifactId>commons-biotic-jaxb</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
+
     </dependencies>
 </project>
