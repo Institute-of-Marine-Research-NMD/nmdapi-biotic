@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvocation> {
+
     /**
      * Class logger.
      */
@@ -95,14 +96,18 @@ public class BioticAccessDecisionVoter implements AccessDecisionVoter<FilterInvo
     }
 
     private int checkAccess(FilterInvocation obj, Authentication auth) {
-        if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
-            return checkAccessInsert(auth);
-        } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.PUT.name()) || obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.DELETE.name())) {
-            return checkAccessUpdate(auth, obj);
-        } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
-            return checkAccessGet(auth, obj);
+        if (configuration.getBoolean("use.security", Boolean.TRUE)) {
+            if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
+                return checkAccessInsert(auth);
+            } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.PUT.name()) || obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.DELETE.name())) {
+                return checkAccessUpdate(auth, obj);
+            } else if (obj.getHttpRequest().getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
+                return checkAccessGet(auth, obj);
+            } else {
+                LOGGER.info(GRANTED);
+                return ACCESS_GRANTED;
+            }
         } else {
-            LOGGER.info(GRANTED);
             return ACCESS_GRANTED;
         }
     }

@@ -87,6 +87,8 @@ public class TestFull {
         mockMvc.perform(get("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201").characterEncoding("UTF-8")).andExpect(status().isNotFound());
     }
 
+
+
     @Test
     public void testFailure() throws Exception {
         //Insert data.

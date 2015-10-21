@@ -50,23 +50,23 @@ public class WebAppInitalizer extends AbstractDispatcherServletInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        super.onStartup(servletContext);
-        Dynamic mdcFilter = servletContext.addFilter("MDCInsertingServletFilter", ch.qos.logback.classic.helpers.MDCInsertingServletFilter.class);
-        mdcFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
-        Dynamic securityFilter = servletContext.addFilter(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME, DelegatingFilterProxy.class);
-        securityFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+            super.onStartup(servletContext);
+            Dynamic mdcFilter = servletContext.addFilter("MDCInsertingServletFilter", ch.qos.logback.classic.helpers.MDCInsertingServletFilter.class);
+            mdcFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+            Dynamic securityFilter = servletContext.addFilter(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME, DelegatingFilterProxy.class);
+            securityFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
 
-        Dynamic encodingFilter = servletContext.addFilter("encodingFilter", org.springframework.web.filter.CharacterEncodingFilter.class);
-        encodingFilter.setInitParameter("encoding", "UTF-8");
-        encodingFilter.setInitParameter("forceEncoding", "true");
-        encodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+            Dynamic encodingFilter = servletContext.addFilter("encodingFilter", org.springframework.web.filter.CharacterEncodingFilter.class);
+            encodingFilter.setInitParameter("encoding", "UTF-8");
+            encodingFilter.setInitParameter("forceEncoding", "true");
+            encodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
 
-        try {
-            InitalizeLogbackHandler.getInstance().initalize(System.getProperty("catalina.base") + "/conf/nmdapi_biotic_logback_v1.xml", true);
-        } catch (LoggerInitalizationException ex) {
-            LOGGER.error("Logging initializaton failed.", ex);
-        }
-        LOGGER.info("Entering application.");
+            try {
+                InitalizeLogbackHandler.getInstance().initalize(System.getProperty("catalina.base") + "/conf/nmdapi_biotic_logback_v1.xml", true);
+            } catch (LoggerInitalizationException ex) {
+                LOGGER.error("Logging initializaton failed.", ex);
+            }
+            LOGGER.info("Entering application.");
     }
 
 }
