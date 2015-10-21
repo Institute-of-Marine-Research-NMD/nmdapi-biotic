@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import no.imr.framework.logging.slf4j.aspects.stereotype.ArgumentLogging;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
@@ -55,6 +56,7 @@ public class BioticController {
      * @return Response object.
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -72,6 +74,7 @@ public class BioticController {
      * @param delivery
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -87,9 +90,9 @@ public class BioticController {
      * @param year
      * @param platform
      * @param delivery
-     * @param missionType
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -103,6 +106,7 @@ public class BioticController {
      *
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -121,6 +125,7 @@ public class BioticController {
      * @return
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.GET, params = {"type=info"}, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -139,6 +144,7 @@ public class BioticController {
      * @param delivery
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/{missiontype}/{year}/{platform}/{delivery}", method = RequestMethod.HEAD)
     @ResponseBody
     public void hasData(HttpServletResponse httpServletResponse, @PathVariable(value = "missiontype") String missiontype, @PathVariable(value = "year") String year, @PathVariable(value = "platform") String platform, @PathVariable(value = "delivery") String delivery) {
@@ -157,6 +163,7 @@ public class BioticController {
      * @return Response object.
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -175,8 +182,10 @@ public class BioticController {
      *
      * @param httpServletResponse
      * @param cruisenr
+     * @param shipname
      */
     @PerformanceLogging
+    @ArgumentLogging
     @RequestMapping(value = "/find", method = RequestMethod.HEAD)
     @ResponseBody
     public void find(HttpServletResponse httpServletResponse, @RequestParam(value = "cruisenr", required = false) String cruisenr, @RequestParam(value = "shipname", required = true) String shipname) {
