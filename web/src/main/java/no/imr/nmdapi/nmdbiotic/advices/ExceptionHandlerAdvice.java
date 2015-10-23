@@ -40,7 +40,7 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorElementType handleException(final NotFoundException ex) {
-        LOGGER.info("Advice logging(Not found): ", ex);
+        LOGGER.info("Advice logging(Not found): " + ex.getMessage());
         ErrorElementType element = new ErrorElementType();
         element.setErrorcode(BigInteger.valueOf(HttpStatus.NOT_FOUND.value()));
         element.setMessage("No data was found.");
