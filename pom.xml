@@ -8,7 +8,7 @@
     </parent>
     <groupId>no.imr.nmdapi.biotic</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
     <name>NMDAPI parent - NMDBiotic</name>
     <modules>
@@ -85,7 +85,7 @@
         <connection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-biotic.git</connection>
         <url>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-biotic.git</url>
         <developerConnection>scm:git:git@github.com:Institute-of-Marine-Research-NMD/nmdapi-biotic.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>parent-1.0.5</tag>
     </scm>
     <distributionManagement>
         <repository>
