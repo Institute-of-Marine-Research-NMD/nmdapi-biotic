@@ -10,6 +10,9 @@ import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
+import no.imr.nmdapi.nmdbiotic.utility.cache.CacheHolder;
+import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,26 @@ public class BioticController {
         LOGGER.info("Start BioticController.findByMission");
         return nmdBioticService.getData(missiontype, year, platform, delivery);
     }
+    
+    /**
+     * Get biotic data by filter of serialno interval and specie.
+     *
+     * @param year
+     * @param from 
+     * @param to
+     * @param specie
+     * @return Response object.
+     */
+    @PerformanceLogging
+    @ArgumentLogging
+    @RequestMapping(value = "/{year}/{from}/{to}/{specie}/serial", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object findBySpecie(@PathVariable(value = "year") String year, @PathVariable(value = "from") String from, @PathVariable(value = "to") String to, @PathVariable(value = "specie") String specie) {
+        LOGGER.info("Start BioticController.findBySpecie");
+        Object result = CacheHolder.getInstance().find(year, specie, from, to);
+        return result;
+    }    
 
     /**
      * Delete biotic data for mission.

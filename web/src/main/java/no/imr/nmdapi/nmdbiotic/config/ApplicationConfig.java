@@ -1,5 +1,7 @@
 package no.imr.nmdapi.nmdbiotic.config;
 
+import no.imr.nmdapi.nmdbiotic.utility.cache.CacheHolder;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 
 /**
  *
@@ -29,11 +32,18 @@ public class ApplicationConfig {
      * @return Configuration object containg properties.
      * @throws ConfigurationException Error during instansiation.
      */
+    //@Bean(name = "bioticConfig")
     @Bean
     public org.apache.commons.configuration.Configuration configuration() throws ConfigurationException {
         org.apache.commons.configuration.PropertiesConfiguration configuration = new org.apache.commons.configuration.PropertiesConfiguration(System.getProperty("catalina.base") + "/conf/nmdapi_biotic_v1.properties");
         ReloadingStrategy reloadingStrategy = new FileChangedReloadingStrategy();
         configuration.setReloadingStrategy(reloadingStrategy);
         return configuration;
+    }
+    
+    @Bean
+    @Lazy(false)
+    public CacheHolder cacheHolder() {
+        return CacheHolder.getInstance();
     }
 }
