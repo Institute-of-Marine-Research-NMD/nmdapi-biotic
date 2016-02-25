@@ -7,6 +7,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import no.imr.framework.logging.logback.initalize.InitalizeLogbackHandler;
 import no.imr.framework.logging.slf4j.exceptions.LoggerInitalizationException;
+import no.imr.nmdapi.nmdbiotic.utility.cache.CacheHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
@@ -59,7 +61,7 @@ public class WebAppInitalizer extends AbstractDispatcherServletInitializer {
             Dynamic encodingFilter = servletContext.addFilter("encodingFilter", org.springframework.web.filter.CharacterEncodingFilter.class);
             encodingFilter.setInitParameter("encoding", "UTF-8");
             encodingFilter.setInitParameter("forceEncoding", "true");
-            encodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+            encodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");            
 
             try {
                 InitalizeLogbackHandler.getInstance().initalize(System.getProperty("catalina.base") + "/conf/nmdapi_biotic_logback_v1.xml", true);

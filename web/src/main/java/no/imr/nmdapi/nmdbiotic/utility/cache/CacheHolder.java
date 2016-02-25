@@ -8,9 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.JAXBException;
 
+import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.ApplicationException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionsType;
-import no.imr.nmdapi.nmdbiotic.utility.common.JAXBUtility;
+import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
 import no.imr.nmdapi.nmdbiotic.utility.files.FilesUtil;
 import no.imr.nmdapi.nmdbiotic.utility.search.CatchSamplesSearch;
 
@@ -21,45 +22,74 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CacheHolder extends CacheUtil {
 
-    private static final Logger                               logger        = LoggerFactory.getLogger(CacheHolder.class);
+    private static final Logger                        logger          = LoggerFactory.getLogger(CacheHolder.class);
 
     @Autowired
-    // @Qualifier("bioticConfig")
-    private PropertiesConfiguration                           config        = null;
+    private PropertiesConfiguration                    config          = null;
 
-    private static Map<String, Integer>                       specieMap     = new ConcurrentHashMap<String, Integer>();
-    private static Map<File, String>                          fileHeaderMap = new ConcurrentHashMap<File, String>();
-    private static Map<String, List<SerialNumberIndexedData>> yearSerialMap = null;
-    //private static List<File>                                 bioticList    = null;
-    private static Map<File, Long>                            currentFilesMap = null;    
-    private static Map<File, Long>                            newFilesMap = null;    
+    private Map<String, Integer>                       specieMap       = new ConcurrentHashMap<String, Integer>();
+    private Map<File, String>                          fileHeaderMap   = new ConcurrentHashMap<File, String>();
+    private Map<String, List<SerialNumberIndexedData>> yearSerialMap   = null;
+    private Map<File, Long>                            currentFilesMap = null;
+    private Map<File, Long>                            newFilesMap     = null;
 
-    private static CacheHolder                                cacheInstance = null;
+    private Object                                     lock            = null;
+    private boolean                                    checkingFiles   = false;
 
-    private static Object                                     lock          = new Object();
+    private static CacheHolder                         cacheHolder     = null;
 
-    private CacheHolder() {
+    public CacheHolder() {
+        init();
     }
-    
-    public void runTest() {
-        
+
+    public static CacheHolder getInstance() {
+        return cacheHolder;
     }
-    
+
+    public void setCacheHolder(CacheHolder cacheHolder) {
+        this.cacheHolder = cacheHolder;
+    }
+
     public void run() {
-        cacheInstance.msSleep(wait_init);
+        logger.info("entering run method...");
+        msSleep(wait_init);
         logger.info("initCache synchronized...");
         synchronized (lock) {
-            logger.info("initCache started...");
-            cacheInstance.initCache();
+            initCache();
         }
-        while (!cacheInstance.isCancelled()) {
-            cacheInstance.msSleep(interval_check);
-            cacheInstance.checkFiles();
+        logger.info("initCache synchronized done");
+        long interval = wait_init;
+        while (!isCancelled()) {
+            interval = checkFilesForUpdates(interval);
         }
     }
-    
-    private void checkFiles() {
-        logger.info("Checking files ...");
+
+    private Object getLock() {
+        if (lock == null) {
+            lock = new Object();
+        }
+        return lock;
+    }
+
+    public void init() {
+        long rtime = CommonUtil.printTimeElapsed("init");
+        lock = getLock();
+        start();
+        CommonUtil.printTimeElapsed(rtime, "init");
+    }
+
+    private long checkFilesForUpdates(long interval) {
+        logger.info("sleeping...");
+        if (msSleep(interval)) {
+            setCheckingFiles(true);
+            checkFiles();
+        }
+        setCheckingFiles(false);
+        return interval_check;
+    }
+
+    public void checkFiles() {
+        long rtime = CommonUtil.printTimeElapsed("checkFiles");
         newFilesMap = getCheckBioticFiles(getBioticFiles());
         Map<String, List<File>> differenceMapList = getFileDifferences(currentFilesMap, newFilesMap);
         if (!differenceMapList.isEmpty()) {
@@ -69,127 +99,133 @@ public class CacheHolder extends CacheUtil {
                 yearSerialMap = updateSerialNumberYearMap(specieMap, fileHeaderMap, differenceMapList, yearSerialMap);
             }
         }
+        CommonUtil.printTimeElapsed(rtime, "checkFiles");
     }
 
     private void initCache() {
+        long rtime = CommonUtil.printTimeElapsed("initCache");
         initProperties(config);
         currentFilesMap = getCheckBioticFiles(getBioticFiles());
         Map<String, List<File>> yearMap = filesUtil.fileListToYearMap(currentFilesMap);
         yearSerialMap = createSerialNumberYearMap(yearMap, specieMap, fileHeaderMap);
         yearMap = clearYearMap(yearMap);
+        CommonUtil.printTimeElapsed(rtime, "initCache");
     }
 
-    private void clearCache() {
-        FilesUtil filesUtil = new FilesUtil();
-        //bioticList = clearList(bioticList);
-        currentFilesMap = clearMap(currentFilesMap);
-        yearSerialMap = clearYearSerialMap(yearSerialMap);
-    }
-    
-    
+    public void clearCache() {
+        long rtime = CommonUtil.printTimeElapsed("clearCache");
+        try {
 
+            shutdown();
+            yearSerialMap = clearYearSerialMap(yearSerialMap);
+            currentFilesMap = clearMap(currentFilesMap);
+            newFilesMap = clearMap(newFilesMap);
+            specieMap = clearMap(specieMap);
+            fileHeaderMap = clearMap(fileHeaderMap);
+            newFilesMap = clearMap(newFilesMap);
+            lock = null;
+            config = null;
+            jaxbUtility = null;
+            filesUtil = null;
+            serialNumberComparator = null;
+            cacheHolder = null;
+            System.gc();
+            gcRunFinalization();
+
+        }
+        catch (Exception exp) {
+            logger.error(exp.getMessage(), exp);
+        }
+        CommonUtil.printTimeElapsed(rtime, "clearCache");
+    }
+
+    private void lInterrupt() {
+        long rtime = CommonUtil.printTimeElapsed("lInterrupt");
+        yield();
+        interrupt();
+        yield();
+        logger.info(isAlive() ? "isAlive" : "isNotAlive");
+        logger.info(isInterrupted() ? "isInterrupted" : "isNotisInterrupted");
+        CommonUtil.printTimeElapsed(rtime, "lInterrupt");
+    }
+
+    public void shutdown() {
+        long rtime = CommonUtil.printTimeElapsed("shutdown");
+        try {
+            setCancelled(true);
+            while (isCheckingFiles()) {
+                msSleep(10);
+            }
+            int count = 0;
+            while ((!isInterrupted()) && (++count < 10)) {
+                lInterrupt();
+            }
+        }
+        catch (Exception exp) {
+            logger.error(exp.getMessage(), exp);
+        }
+        CommonUtil.printTimeElapsed(rtime, "shutdown");
+
+    }
+
+    @PerformanceLogging
     public synchronized MissionsType find(String year, String specie, String fromSerialNo, String toSerialNo) {
+        String message = "find : parameters year :" + year + " specie :" + specie + " from :" + fromSerialNo + " to :" + toSerialNo;
+        long rtime = CommonUtil.printTimeElapsed(message);
         MissionsType missions = null;
         synchronized (lock) {
             CatchSamplesSearch search = new CatchSamplesSearch();
             String resultString = search.find(year, specie, new BigInteger(fromSerialNo), new BigInteger(toSerialNo), yearSerialMap, specieMap, fileHeaderMap, this);
             try {
-                //long rtime = CommonUtil.printTimeElapsed("CacheHolder.unmarshal");
                 missions = (MissionsType) jaxbUtility.unmarshal(resultString, MissionsType.class);
-                //rtime = CommonUtil.printTimeElapsed(rtime, "CacheHolder.unmarshal");
                 testWriteToFile(resultString);
                 resultString = null;
             }
             catch (JAXBException exp) {
                 logger.error(exp.getMessage(), exp);
-                throw new ApplicationException(exp.getMessage(), exp); 
-            }     
+                throw new ApplicationException(exp.getMessage(), exp);
+            }
         }
+        CommonUtil.printTimeElapsed(rtime, message);
         return missions;
     }
 
-    public void attachShutDownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                logger.info("CacheHolder is shutting down...");
-                cacheInstance.clearCache();
-                cacheInstance.setCancelled(true);
-                cacheInstance.yield();
-                cacheInstance.interrupt();
-            }
-        });
+    public PropertiesConfiguration getConfig() {
+        return config;
     }
 
-    public static CacheHolder getInstance() {
-        if (cacheInstance == null) {
-            if (cacheInstance == null) {
-                // synchronized (lock) {
-                cacheInstance = new CacheHolder();
-                cacheInstance.start();
-                cacheInstance.attachShutDownHook();
-                // }
-
-            }
-        }
-        return cacheInstance;
+    public void setConfig(PropertiesConfiguration config) {
+        this.config = config;
     }
 
-    public static void main(String[] args) {
-
-        path_data = "D:\\san\\";
-        path_data = "D:\\santomcat7prod\\datasets\\";
-        path_data = "D:\\santomcat7test\\datasets\\";
-        
-        data_year = "2015";
-        data_year = "2007";
-        
-        //bioticList = get
-
-        FilesUtil filesUtil = new FilesUtil();
-        //CacheHolder cacheHolder = new CacheHolder();
-        //currentFilesMap = cacheHolder.getBioticFiles();
-        
-        
-        
-//        if ((data_year != null) && !data_year.isEmpty()) {
-//            bioticList = filesUtil.getFilesByFilter(path_data, "biotic", data_year);
-//        }
-//        else {
-//            bioticList = filesUtil.getFilesByFilter(path_data, "biotic");
-//            logger.info("" + bioticList.size());
-//        }
-//        
-//        for (int inx = 0; inx < bioticList.size(); inx++) {
-//            logger.info(bioticList.get(inx).getAbsolutePath());
-//        }
-//        
-//        
-//        for (int inx = 1990; inx < 2017; inx++) {
-//            bioticList = filesUtil.getFilesByFilter(path_data, "biotic", inx + "");
-//            logger.info("year " + inx + " size " + bioticList.size());
-//        }
-        
-        
-         //http://localhost:10112/apis/nmdapi/biotic/v1/2007/23001/23001/161722.G03/serial
-        
-         CacheHolder.getInstance().jaxbUtility = new JAXBUtility(memory_format);
-         CacheHolder.getInstance().initCache();
-         MissionsType mission = CacheHolder.getInstance().find(data_year, "161722.G03", "0", "100000");
-         
-         logger.info("mission "+mission.getMission().size());
-         logger.info("mission "+mission.getMission().size());
-         cacheInstance.checkFiles();
-         
-         mission = CacheHolder.getInstance().find(data_year, "161722.G03", "0", "100000");
-         
-         logger.info("mission "+mission.getMission().size());
-         
-//         mission = CacheHolder.getInstance().find(data_year, "171677", "24139", "24140");
-//         mission = CacheHolder.getInstance().find(data_year, "171677", "24139", "24139");
-//         mission = CacheHolder.getInstance().find(data_year, "171677", "24139", "24140");
-         //FileUtils.writeStringToFile(new File("D:\\biotictest\\data.xml"), resultString, StandardCharsets.UTF_8.name());
-
+    public boolean isCheckingFiles() {
+        logger.info("isCheckingFiles " + this.checkingFiles);
+        return checkingFiles;
     }
+
+    public void setCheckingFiles(boolean checkingFiles) {
+        this.checkingFiles = checkingFiles;
+        logger.info("setCheckingFiles " + this.checkingFiles);
+    }
+
+     public static void main(String[] args) {
+    
+     path_data = "D:\\san\\";
+     path_data = "D:\\santomcat7test\\datasets\\";
+     path_data = "D:\\santomcat7prod\\datasets\\";
+    
+     List<File> bioticList = null;
+    
+    
+     FilesUtil filesUtil = new FilesUtil();
+    
+     bioticList = filesUtil.getFilesByFilter(path_data, "biotic", "2014");
+     for (int inx = 1990; inx < 2017; inx++) {
+     bioticList = filesUtil.getFilesByFilter(path_data, "biotic", inx + "");
+     logger.info("year " + inx + " size " + bioticList.size());
+     }
+    
+    
+     }
 
 }

@@ -3,16 +3,19 @@ package no.imr.nmdapi.nmdbiotic.controller;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import no.imr.framework.logging.slf4j.aspects.stereotype.ArgumentLogging;
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.BadRequestException;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
+import no.imr.nmdapi.generic.response.v1.ResultElementType;
 import no.imr.nmdapi.nmdbiotic.service.NMDBioticService;
 import no.imr.nmdapi.nmdbiotic.utility.cache.CacheHolder;
-import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,10 @@ public class BioticController {
      */
     @Autowired
     private NMDBioticService nmdBioticService;
+    
+    @Autowired
+    private PropertiesConfiguration config;
+    
 
     /**
      * Get biotic data for mission.
@@ -86,6 +93,56 @@ public class BioticController {
         LOGGER.info("Start BioticController.findBySpecie");
         Object result = CacheHolder.getInstance().find(year, specie, from, to);
         return result;
+    } 
+    
+    /**
+     * Refreshing cache by checking files.
+     *
+     * @return Response object.
+     */
+    @PerformanceLogging
+    @ArgumentLogging
+    @RequestMapping(value = "/refreshCache", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object refreshCache() {
+        LOGGER.info("Start BioticController.refreshCache");
+        CacheHolder.getInstance().checkFiles();
+        ResultElementType element = new ResultElementType();
+        element.setResult("refreshCache OK");
+        return element;
+    }   
+    
+    /**
+     * Refreshing cache by checking files.
+     *
+     * @return Response object.
+     */
+//    @PerformanceLogging
+//    @ArgumentLogging
+//    @RequestMapping(value = "/initCache", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
+//    @ResponseStatus(HttpStatus.OK)
+//    @ResponseBody
+//    public Object initCache() {
+//        LOGGER.info("Start BioticController.initCache");
+//        CacheHolder.getInstance().setConfig(config);
+//        CacheHolder.getInstance().init();
+//        ResultElementType element = new ResultElementType();
+//        element.setResult("initCache OK");
+//        return element;
+//    }     
+    
+    @PerformanceLogging
+    @ArgumentLogging
+    @RequestMapping(value = "/clearCache", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
+    @ResponseStatus(HttpStatus.OK) 
+    @ResponseBody 
+    public Object clearCache() {
+        LOGGER.info("Start BioticController.clearCache");
+        CacheHolder.getInstance().clearCache();
+        ResultElementType element = new ResultElementType();
+        element.setResult("clearCache OK"); 
+        return element;
     }    
 
     /**

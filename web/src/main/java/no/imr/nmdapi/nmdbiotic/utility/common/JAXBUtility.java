@@ -14,6 +14,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
+import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,7 @@ public class JAXBUtility {
     private boolean formatted_output = true;
     
     
-    public JAXBUtility(boolean formatted_output) {
+    public JAXBUtility(boolean formatted_output) { 
         this.formatted_output = formatted_output;
     }
     
@@ -45,6 +47,7 @@ public class JAXBUtility {
      * @return the object
      * @throws JAXBException
      */
+    @PerformanceLogging
     public Object unmarshal(String xmlString, Class<?>... objClasses) throws JAXBException {
         Object clInstance = null;
         try {
@@ -79,6 +82,7 @@ public class JAXBUtility {
         return jaxbMarshaller;
     }
     
+    @PerformanceLogging    
     private String removeStrings(String target, String...strings) {
         int index = 0;
         while ((target != null) && (index < strings.length)) {
@@ -89,7 +93,7 @@ public class JAXBUtility {
     }
     
 
-
+    @PerformanceLogging
     public String marshalChildren(Object metadata, String namespaceURI) throws JAXBException {
         String result = null;
         try {
@@ -128,6 +132,7 @@ public class JAXBUtility {
      *            the obj class
      * @throws JAXBException
      */
+    @PerformanceLogging
     public void marshal(String fileName, Object metadata, Class<?>... objClasses) throws JAXBException {
         try {
             Marshaller jaxbMarshaller = initMarshaller(objClasses);
@@ -139,6 +144,7 @@ public class JAXBUtility {
         }
     }
 
+    @PerformanceLogging
     public String marshal(Object metadata, Class<?>... objClasses) throws JAXBException {
         String xmlString = null;
         try {

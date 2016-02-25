@@ -3,8 +3,10 @@ package no.imr.nmdapi.nmdbiotic.utility.cache;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,10 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.bind.JAXBException;
 
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
+import no.imr.nmdapi.generic.nmdbiotic.domain.v1.AgeDeterminationType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.CatchSampleType;
+import no.imr.nmdapi.generic.nmdbiotic.domain.v1.CopepodedevstageType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.FishStationType;
+import no.imr.nmdapi.generic.nmdbiotic.domain.v1.IndividualType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionsType;
+import no.imr.nmdapi.generic.nmdbiotic.domain.v1.PreyType;
+import no.imr.nmdapi.generic.nmdbiotic.domain.v1.PreylengthType;
 import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
 import no.imr.nmdapi.nmdbiotic.utility.common.JAXBUtility;
 import no.imr.nmdapi.nmdbiotic.utility.files.FilesUtil;
@@ -34,43 +41,44 @@ import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.collect.Maps;
 
 public class CacheUtil extends EThread {
+//public class CacheUtil {
 
-    private final static String    TAG_MISSIONS             = "<missions ";
-    private final static String    TAG_MISSION_YEAR         = "<mission year";
-    private final static String    TAG_FISHSTATION_SERIALNO = "fishstation serialno";
-    private final static String    XML_MISSIONS_XMLNS       = TAG_MISSIONS + JAXBUtility.XML_XMLNS;
-    private final static String    XML_NMD_BIOTIC_FORMAT    = "http://www.imr.no/formats/nmdbiotic/v1";
-    public final static String     XML_MISSIONS             = XML_MISSIONS_XMLNS + XML_NMD_BIOTIC_FORMAT + "\">";
-    public final static String     XML_CR                   = "\n";
+    private final static String      TAG_MISSIONS             = "<missions ";
+    private final static String      TAG_MISSION_YEAR         = "<mission year";
+    private final static String      TAG_FISHSTATION_SERIALNO = "fishstation serialno";
+    private final static String      XML_MISSIONS_XMLNS       = TAG_MISSIONS + JAXBUtility.XML_XMLNS;
+    private final static String      XML_NMD_BIOTIC_FORMAT    = "http://www.imr.no/formats/nmdbiotic/v1";
+    public final static String       XML_MISSIONS             = XML_MISSIONS_XMLNS + XML_NMD_BIOTIC_FORMAT + "\">";
+    public final static String       XML_CR                   = "\n";
 
-    public final static String     DIFF_UPDATED_FILES       = "UPDATED_FILES";
-    public final static String     DIFF_REMOVED_FILES       = "REMOVED_FILES";
-    public final static String     DIFF_NEW_FILES           = "NEW_FILES";
+    public final static String       DIFF_UPDATED_FILES       = "UPDATED_FILES";
+    public final static String       DIFF_REMOVED_FILES       = "REMOVED_FILES";
+    public final static String       DIFF_NEW_FILES           = "NEW_FILES";
 
-    protected static String        KEY_PATH                 = "pre.data.dir";
-    protected static String        KEY_FORMAT               = "memory.format";
-    protected static String        KEY_TEST                 = "data.test";
-    protected static String        KEY_TEST_PATH            = "path.test";
-    protected static String        KEY_WAIT_INIT            = "wait.init";
-    protected static String        KEY_YEAR                 = "data.year";
-    protected static String        KEY_INTERVAL             = "checkfiles.interval";
-    protected static String        path_data                = "/san/test/datasets/";
-    protected static boolean       memory_format            = true;
-    protected static boolean       data_test                = false;
-    protected static String        path_test                = "D:\\biotictest\\";
-    protected static long          wait_init                = 10000;
-    protected static long          interval_check           = 300000;
-    protected static String        data_year                = null;
+    protected static String          KEY_PATH                 = "pre.data.dir";
+    protected static String          KEY_FORMAT               = "memory.format";
+    protected static String          KEY_TEST                 = "data.test";
+    protected static String          KEY_TEST_PATH            = "path.test";
+    protected static String          KEY_WAIT_INIT            = "wait.init";
+    protected static String          KEY_YEAR                 = "data.year";
+    protected static String          KEY_INTERVAL             = "checkfiles.interval";
+    protected static String          path_data                = "/san/test/datasets/";
+    protected static boolean         memory_format            = true;
+    protected static boolean         data_test                = false;
+    protected static String          path_test                = "/biotictest/";
+    protected static long            wait_init                = 10000;
+    protected static long            interval_check           = 36000000;
+    protected static String          data_year                = null;
 
-    private static final Logger    logger                   = LoggerFactory.getLogger(CacheUtil.class);
+    private static final Logger      logger                   = LoggerFactory.getLogger(CacheUtil.class);
 
-    private static final Runtime   runtime                  = Runtime.getRuntime();
-
-    protected JAXBUtility          jaxbUtility              = null;
-    protected FilesUtil            filesUtil                = new FilesUtil();
-    private SerialNumberComparator serialNumberComparator   = new SerialNumberComparator();
+    protected JAXBUtility            jaxbUtility              = null;
+    protected FilesUtil              filesUtil                = new FilesUtil();
+    protected SerialNumberComparator serialNumberComparator   = new SerialNumberComparator();
 
     protected Map<File, Long> getBioticFiles() {
+        long rtime = CommonUtil.printTimeElapsed("getBioticFiles");
+
         Map<File, Long> bioticMap = null;
         try {
             if ((data_year != null) && !data_year.isEmpty()) {
@@ -84,6 +92,7 @@ public class CacheUtil extends EThread {
         catch (IOException exp) {
             logger.error(exp.getMessage(), exp);
         }
+        CommonUtil.printTimeElapsed(rtime, "getBioticFiles");
         return bioticMap;
     }
 
@@ -155,7 +164,6 @@ public class CacheUtil extends EThread {
         if (config != null) {
             path_data = config.getString(KEY_PATH, path_data);
             path_test = config.getString(KEY_TEST_PATH, path_test);
-
             memory_format = config.getBoolean(KEY_FORMAT, memory_format);
             data_test = config.getBoolean(KEY_TEST, data_test);
             wait_init = config.getLong(KEY_WAIT_INIT, wait_init);
@@ -163,6 +171,13 @@ public class CacheUtil extends EThread {
             data_year = config.getString(KEY_YEAR, data_year);
             data_year = filesUtil.isYear(data_year) ? data_year : "";
             jaxbUtility = new JAXBUtility(memory_format);
+            logger.info("path_data      " + path_data);
+            logger.info("memory_format  " + memory_format);
+            logger.info("data_test      " + data_test);
+            logger.info("path_test      " + path_test);
+            logger.info("wait_init      " + wait_init);
+            logger.info("interval_check " + interval_check);
+            logger.info("data_year      " + data_year);
         }
     }
 
@@ -321,6 +336,7 @@ public class CacheUtil extends EThread {
             else {
                 // logger.info("catchSamples.isEmpty "+file.getAbsolutePath());
             }
+            //testMemoryLeak(catchSamples);
             catchSamples = clearList(catchSamples);
         }
         catch (Exception exp) {
@@ -331,42 +347,79 @@ public class CacheUtil extends EThread {
         return ok;
     }
 
+    private void testMemoryLeak(List<CatchSampleType> catchSamples) {
+        // Testing memoryleak
+        for (CatchSampleType catchSampleType : catchSamples) {
+            List<PreyType> listPrey = catchSampleType.getPrey();
+            List<IndividualType> listIndividualType = catchSampleType.getIndividual();
+            for (IndividualType individualType : listIndividualType) {
+                List<AgeDeterminationType> listAgeDeterminationType = individualType.getAgedetermination();
+                for (AgeDeterminationType ageDeterminationType : listAgeDeterminationType) {
+                    ageDeterminationType = null;
+                }
+                listAgeDeterminationType = clearList(listAgeDeterminationType);
+                individualType = null;
+            }
+            listIndividualType = clearList(listIndividualType);
+
+            for (PreyType preyType : listPrey) {
+                List<PreylengthType> listPreylengthType = preyType.getPreylength();
+                for (PreylengthType preylengthType : listPreylengthType) {
+                    preylengthType = null;
+                }
+                listPreylengthType = clearList(listPreylengthType);
+
+                List<CopepodedevstageType> listCopepodedevstageType = preyType.getCopepodedevstage();
+                for (CopepodedevstageType copepodedevstageType : listCopepodedevstageType) {
+                    copepodedevstageType = null;
+                }
+                listCopepodedevstageType = clearList(listCopepodedevstageType);
+                preyType = null;
+            }
+            listPrey = clearList(listPrey);
+            catchSampleType = null;
+        }
+    }
+
     public List clearList(List list) {
-        list.clear();
-        list = null;
-        // gc();
+        if (list != null) {
+            list.clear();
+            list = null;
+        }
         return list;
     }
 
     public Map clearMap(Map map) {
-        map.clear();
-        map = null;
-        // gc();
+        if (map != null) {
+            map.clear();
+            map = null;
+        }
         return map;
     }
 
-    public void runFinalizationEnd() {
-        long rtime = CommonUtil.printTimeElapsed(0, "runFinalization");
-        gc();
+    public void gcRunFinalization() {
+        long rtime = CommonUtil.printTimeElapsed(0, "gcRunFinalization ");
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
         runtime.runFinalization();
-        gc();
-        rtime = CommonUtil.printTimeElapsed(rtime, "runFinalization");
-    }
-
-    public void gc() {
-        long rtime = CommonUtil.printTimeElapsed(0, "gc");
         runtime.gc();
-        rtime = CommonUtil.printTimeElapsed(rtime, "gc");
+        logger.info("usedMemory " +readableFileSize(usedMemory(runtime)) + "");
+        logger.info("usedMemory " + usedMemory(runtime) + "");
+        rtime = CommonUtil.printTimeElapsed(rtime, "gcRunFinalization");
     }
 
-    private long usedMemory() {
-        runtime.gc();
-        // Thread.yield();
-        long mem = runtime.totalMemory() - runtime.freeMemory();
-        return mem;
-    }
+     private long usedMemory(Runtime runtime) {
+         return runtime.totalMemory() - runtime.freeMemory();
+     }
+     
+     private String readableFileSize(long size) {
+         if(size <= 0) return "0";
+         final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+         return new DecimalFormat("#,##0.####").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+     }     
 
-    private Map<String, List<SerialNumberIndexedData>> removeFiles(List<File> fileList, Map<String, Integer> specieMap, Map<File, String> fileHeaderMap, Map<String, List<File>> diffMap, Map<String, List<SerialNumberIndexedData>> fileIndexedMap) {
+    private Map<String, List<SerialNumberIndexedData>> removeFilesFromCache(List<File> fileList, Map<String, Integer> specieMap, Map<File, String> fileHeaderMap, Map<String, List<SerialNumberIndexedData>> fileIndexedMap) {
         for (File file : fileList) {
             String year = filesUtil.getYear(file);
             fileHeaderMap.remove(file);
@@ -386,10 +439,10 @@ public class CacheUtil extends EThread {
         return fileIndexedMap;
     }
 
-    private Map<String, List<SerialNumberIndexedData>>  sortSerialNoList(String year, Map<String, List<SerialNumberIndexedData>> fileIndexedMap) {
+    private Map<String, List<SerialNumberIndexedData>> sortSerialNoList(String year, Map<String, List<SerialNumberIndexedData>> fileIndexedMap) {
         List<SerialNumberIndexedData> serialNumberList = fileIndexedMap.get(year);
         if ((fileIndexedMap.size() > 0) && (serialNumberList != null) && (serialNumberList.size() > 1)) {
-            Collections.sort(serialNumberList, serialNumberComparator);                    
+            Collections.sort(serialNumberList, serialNumberComparator);
         }
         return fileIndexedMap;
     }
@@ -401,7 +454,7 @@ public class CacheUtil extends EThread {
             String key = entry.getKey();
             List<File> fileList = entry.getValue();
             if ((key.equals(DIFF_UPDATED_FILES)) || (key.equals(DIFF_REMOVED_FILES))) {
-                fileIndexedMap = removeFiles(fileList, specieMap, fileHeaderMap, diffMap, fileIndexedMap);
+                fileIndexedMap = removeFilesFromCache(fileList, specieMap, fileHeaderMap, fileIndexedMap);
             }
             if ((key.equals(DIFF_UPDATED_FILES)) || (key.equals(DIFF_NEW_FILES))) {
                 List<String> yearList = new ArrayList<>();
@@ -415,7 +468,7 @@ public class CacheUtil extends EThread {
                 }
             }
         }
-        runFinalizationEnd();
+        gcRunFinalization();
         return fileIndexedMap;
     }
 
@@ -455,11 +508,11 @@ public class CacheUtil extends EThread {
             int yearCounter = 0;
             int fileCounter = 0;
             for (Map.Entry<String, List<File>> entry : yearMap.entrySet()) {
-                logger.info(++yearCounter + " fileMap size " + yearMap.size() + " year :"+entry.getKey());
+                logger.info(++yearCounter + " fileMap size " + yearMap.size() + " year :" + entry.getKey());
                 List<File> fileList = entry.getValue();
                 String year = entry.getKey();
                 for (File file : fileList) {
-                    logger.info(++fileCounter + " fileList size " + fileList.size());
+                    logger.info(++fileCounter + " fileList size " + fileList.size() + " yearCounter " + yearCounter + " fileMap size " + yearMap.size() + " year :" + entry.getKey());
                     insertFile(file, year, specieMap, fileHeaderMap, fileIndexedMap);
                 }
                 fileIndexedMap = sortSerialNoList(year, fileIndexedMap);
@@ -470,16 +523,27 @@ public class CacheUtil extends EThread {
             logger.error(exp.getMessage(), exp);
         }
         finally {
-            runFinalizationEnd();
+            gcRunFinalization();
         }
         CommonUtil.printTimeElapsed(rtime, "createSerialNumberYearMap");
         return fileIndexedMap;
     }
 
+    // private SerialNumberIndexedData dispose(SerialNumberIndexedData
+    // serialNumberIndexedData) {
+    // serialNumberIndexedData.dispose();
+    // serialNumberIndexedData = null;
+    // return serialNumberIndexedData;
+    // }
+
     public Map<String, List<SerialNumberIndexedData>> clearYearSerialMap(Map<String, List<SerialNumberIndexedData>> serialMap) {
         try {
             for (Map.Entry<String, List<SerialNumberIndexedData>> entry : serialMap.entrySet()) {
                 List<SerialNumberIndexedData> fileList = entry.getValue();
+                for (SerialNumberIndexedData serialNumberIndexedData : fileList) {
+                    serialNumberIndexedData.dispose();
+                    serialNumberIndexedData = null;
+                }
                 fileList = clearList(fileList);
             }
             serialMap = clearMap(serialMap);
@@ -488,7 +552,7 @@ public class CacheUtil extends EThread {
             logger.error(exp.getMessage(), exp);
         }
         finally {
-            runFinalizationEnd();
+            gcRunFinalization();
         }
 
         return serialMap;
@@ -506,7 +570,7 @@ public class CacheUtil extends EThread {
             logger.error(exp.getMessage(), exp);
         }
         finally {
-            runFinalizationEnd();
+            gcRunFinalization();
         }
         return yearMap;
     }
@@ -520,7 +584,6 @@ public class CacheUtil extends EThread {
                 logger.error(exp.getMessage(), exp);
             }
         }
-
     }
 
 }

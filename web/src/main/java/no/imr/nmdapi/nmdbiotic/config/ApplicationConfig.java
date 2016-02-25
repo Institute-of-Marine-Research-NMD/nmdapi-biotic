@@ -43,7 +43,9 @@ public class ApplicationConfig {
     
     @Bean
     @Lazy(false)
-    public CacheHolder cacheHolder() {
-        return CacheHolder.getInstance();
+    public CacheHolder cacheHolder() {        
+        CacheHolder cacheHolder = new CacheHolder();
+        cacheHolder.setCacheHolder(cacheHolder);
+        return cacheHolder;
     }
 }

@@ -48,12 +48,16 @@ public class FilesUtil {
     }
     
     public Map<File, Long> getFileMapByFilter(String dir, String leafDirectory, String... directoryNameFilter) throws IOException {
+        long rtime = CommonUtil.printTimeElapsed("getFileMapByFilter");
         Map<File, Long> map = new ConcurrentHashMap<File, Long>();
         List<File> list = getFilesByFilter(dir, leafDirectory, directoryNameFilter);
         for (File file : list) {
             //map.put(file, FileUtils.checksumCRC32(file));
-            map.put(file, file.lastModified());
+            long lastModified = file.lastModified();
+            map.put(file, lastModified);
+            //logger.info("lastModified "+lastModified+" file "+file.getAbsolutePath());
         }
+        CommonUtil.printTimeElapsed(rtime, "getFileMapByFilter");        
         return map;
     } 
     

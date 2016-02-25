@@ -23,7 +23,7 @@ public class CommonUtil {
                 }
             }
             else {
-                logger.info(startStr);
+                logger.info(startStr); 
             }
         }
         return time;

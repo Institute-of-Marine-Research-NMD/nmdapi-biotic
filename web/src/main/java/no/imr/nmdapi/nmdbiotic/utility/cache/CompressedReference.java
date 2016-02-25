@@ -20,7 +20,7 @@ public class CompressedReference<T extends Serializable> implements Serializable
 
     private byte[]            theCompressedReferent = null;
 
-    public CompressedReference(T referent) {
+    public CompressedReference(T referent) { 
         try {
             compress(referent);
         }

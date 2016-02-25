@@ -38,14 +38,18 @@ public class EThread extends Thread implements ThreadFactory {
         return userData;
     }
 
-    public void msSleep(long ms) {
+    public boolean msSleep(long ms) {
+        boolean ok = true;
         try {
             Thread.sleep(ms);
         }
-        catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        catch (InterruptedException exp) {
+            logger.info("sleep interrupted");
+            ok = false;
         }
-    }
+        return ok;
+        
+    }   
 
     public boolean isCancelled() {
         return cancelled;

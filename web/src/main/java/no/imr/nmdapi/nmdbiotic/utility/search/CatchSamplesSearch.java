@@ -2,17 +2,10 @@ package no.imr.nmdapi.nmdbiotic.utility.search;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.interceptor.CacheInterceptor;
-
-import com.google.common.io.Files;
 
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
 import no.imr.nmdapi.exceptions.ApplicationException;
@@ -22,8 +15,10 @@ import no.imr.nmdapi.nmdbiotic.utility.cache.CacheHolder;
 import no.imr.nmdapi.nmdbiotic.utility.cache.CacheUtil;
 import no.imr.nmdapi.nmdbiotic.utility.cache.SerialNoCompressedData;
 import no.imr.nmdapi.nmdbiotic.utility.cache.SerialNumberIndexedData;
-import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
 import no.imr.nmdapi.nmdbiotic.utility.common.JAXBUtility;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CatchSamplesSearch implements IBioticFilter {
@@ -148,7 +143,7 @@ public class CatchSamplesSearch implements IBioticFilter {
           }
       }
       return range;
-    }
+    } 
     
 
     @PerformanceLogging

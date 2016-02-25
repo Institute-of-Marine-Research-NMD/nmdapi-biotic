@@ -4,6 +4,7 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -31,6 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext-test.xml"})
 @WebAppConfiguration
+@Ignore
 public class TestFull {
 
     private MockMvc mockMvc;
@@ -48,6 +50,12 @@ public class TestFull {
         XMLUnit.setIgnoreComments(true);
         mockMvc = webAppContextSetup(webApplicationContext).build();
     }
+    
+    @Test
+    public void testFiles() throws Exception {
+        
+        
+    }    
 
     @Test
     public void testFull() throws Exception {

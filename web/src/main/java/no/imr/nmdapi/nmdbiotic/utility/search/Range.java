@@ -1,7 +1,7 @@
 package no.imr.nmdapi.nmdbiotic.utility.search;
 
 
-public class Range  {
+public class Range {
 
     
     private int fromInclusivePosition = -1;
