@@ -13,8 +13,8 @@ public class BioticNamespacePrefixMapper extends NamespacePrefixMapper {
 
     @Override
     public String getPreferredPrefix(String namespaceUri,
-                               String suggestion,
-                               boolean requirePrefix) {
+            String suggestion,
+            boolean requirePrefix) {
         return "";
     }
 

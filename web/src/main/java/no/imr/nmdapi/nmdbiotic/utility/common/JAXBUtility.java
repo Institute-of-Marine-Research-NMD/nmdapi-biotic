@@ -21,29 +21,24 @@ import org.slf4j.LoggerFactory;
 
 public class JAXBUtility {
 
-    private static Logger      logger                   = LoggerFactory.getLogger(JAXBUtility.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(JAXBUtility.class.getName());
 
-    public final static String XML_HEADER                  = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"; 
-    public final static String XML_XMLNS                   = "xmlns=\"";
-    public final static String XML_NMD_BIOTIC_FORMAT       = "http://www.imr.no/formats/nmdbiotic/v1\"";
-    public final static String XML_XMLNS_NMD_BIOTIC_FORMAT = XML_XMLNS+XML_NMD_BIOTIC_FORMAT; 
-    
-    
+    public final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+    public final static String XML_XMLNS = "xmlns=\"";
+    public final static String XML_NMD_BIOTIC_FORMAT = "http://www.imr.no/formats/nmdbiotic/v1\"";
+    public final static String XML_XMLNS_NMD_BIOTIC_FORMAT = XML_XMLNS + XML_NMD_BIOTIC_FORMAT;
+
     private boolean formatted_output = true;
-    
-    
-    public JAXBUtility(boolean formatted_output) { 
+
+    public JAXBUtility(boolean formatted_output) {
         this.formatted_output = formatted_output;
     }
-    
-    
+
     /**
      * Unmarshall.
-     * 
-     * @param xmlString
-     *            the xml string
-     * @param objClass
-     *            the obj class
+     *
+     * @param xmlString the xml string
+     * @param objClasses
      * @return the object
      * @throws JAXBException
      */
@@ -57,9 +52,8 @@ public class JAXBUtility {
             StringReader reader = new StringReader(xmlString);
             clInstance = (Object) jaxbUnmarshaller.unmarshal(reader);
             reader.close();
-        }
-        catch (JAXBException exp) {
-            logger.error(exp.getMessage(), exp);
+        } catch (JAXBException exp) {
+            LOGGER.error(exp.getMessage(), exp);
             throw exp;
         }
 
@@ -74,16 +68,15 @@ public class JAXBUtility {
 
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, formatted_output);
             jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        }
-        catch (JAXBException exp) {
-            logger.error(exp.getMessage(), exp);
+        } catch (JAXBException exp) {
+            LOGGER.error(exp.getMessage(), exp);
             throw exp;
         }
         return jaxbMarshaller;
     }
-    
-    @PerformanceLogging    
-    private String removeStrings(String target, String...strings) {
+
+    @PerformanceLogging
+    private String removeStrings(String target, String... strings) {
         int index = 0;
         while ((target != null) && (index < strings.length)) {
             target = target.replace(strings[index], "");
@@ -91,7 +84,6 @@ public class JAXBUtility {
         }
         return target;
     }
-    
 
     @PerformanceLogging
     public String marshalChildren(Object metadata, String namespaceURI) throws JAXBException {
@@ -103,33 +95,27 @@ public class JAXBUtility {
             String rootPackage = objectClass.getName();
             rootPackage = rootPackage.substring(0, rootPackage.lastIndexOf("."));
 
-            // QName qName = new QName(rootPackage, name);
             QName qName = new QName(namespaceURI, name);
             JAXBElement<Object> root = new JAXBElement(qName, objectClass, metadata);
             result = marshal(root, objectClass);
             result = removeStrings(result, XML_HEADER, XML_XMLNS_NMD_BIOTIC_FORMAT);
 
-        }
-        catch (JAXBException exp) {
-            logger.error(exp.getMessage(), exp);
+        } catch (JAXBException exp) {
+            LOGGER.error(exp.getMessage(), exp);
             throw exp;
+        } catch (Exception exp) {
+            LOGGER.error(exp.getMessage(), exp);
         }
-        catch (Exception exp) {
-            logger.error(exp.getMessage(), exp);
-        }        
 
         return result;
     }
 
     /**
      * Marshall.
-     * 
-     * @param fileName
-     *            the file name
-     * @param metadata
-     *            the evry metadata
-     * @param objClass
-     *            the obj class
+     *
+     * @param fileName the file name
+     * @param metadata the evry metadata
+     * @param objClasses
      * @throws JAXBException
      */
     @PerformanceLogging
@@ -137,9 +123,8 @@ public class JAXBUtility {
         try {
             Marshaller jaxbMarshaller = initMarshaller(objClasses);
             jaxbMarshaller.marshal(metadata, new File(fileName));
-        }
-        catch (JAXBException exp) {
-            logger.error(exp.getMessage(), exp);
+        } catch (JAXBException exp) {
+            LOGGER.error(exp.getMessage(), exp);
             throw exp;
         }
     }
@@ -154,9 +139,8 @@ public class JAXBUtility {
             jaxbMarshaller.marshal(metadata, stringWriter);
 
             xmlString = stringWriter.toString();
-        }
-        catch (JAXBException exp) {
-            logger.error(exp.getMessage(), exp);
+        } catch (JAXBException exp) {
+            LOGGER.error(exp.getMessage(), exp);
             throw exp;
         }
         return xmlString;

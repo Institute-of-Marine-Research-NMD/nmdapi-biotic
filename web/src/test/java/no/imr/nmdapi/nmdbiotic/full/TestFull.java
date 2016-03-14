@@ -50,12 +50,11 @@ public class TestFull {
         XMLUnit.setIgnoreComments(true);
         mockMvc = webAppContextSetup(webApplicationContext).build();
     }
-    
+
     @Test
     public void testFiles() throws Exception {
-        
-        
-    }    
+
+    }
 
     @Test
     public void testFull() throws Exception {
@@ -67,7 +66,7 @@ public class TestFull {
                 .contentType(MediaType.APPLICATION_XML)
                 .characterEncoding("UTF-8")
                 .content(FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1.xml").getFile()), "UTF-8"))
-                )
+        )
                 .andExpect(status().isOk());
         // Verify that data is there.
         final String insertedFile = FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1.xml").getFile()), "UTF-8");
@@ -79,7 +78,7 @@ public class TestFull {
                 .contentType(MediaType.APPLICATION_XML)
                 .characterEncoding("UTF-8")
                 .content(FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1_2.xml").getFile()), "UTF-8"))
-                )
+        )
                 .andExpect(status().isOk());
 
         // Verify that data is there.
@@ -95,8 +94,6 @@ public class TestFull {
         mockMvc.perform(get("/Forskningsfartøy/2014/Johan Hjort-LDGJ/2014201").characterEncoding("UTF-8")).andExpect(status().isNotFound());
     }
 
-
-
     @Test
     public void testFailure() throws Exception {
         //Insert data.
@@ -105,7 +102,7 @@ public class TestFull {
                 .contentType(MediaType.APPLICATION_XML)
                 .characterEncoding("UTF-8")
                 .content(FileUtils.readFileToString(new File(this.getClass().getClassLoader().getResource("4-2015-4174-1_failure.xml").getFile()), "UTF-8"))
-                )
+        )
                 .andExpect(status().isBadRequest());
     }
 

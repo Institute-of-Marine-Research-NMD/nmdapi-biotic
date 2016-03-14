@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author kjetilf
  *
- * This class is always run after the controllers and is used to define
- * the output if an error occurs.
+ * This class is always run after the controllers and is used to define the
+ * output if an error occurs.
  */
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
@@ -33,8 +33,9 @@ public class ExceptionHandlerAdvice {
 
     /**
      * Returned response code should be 404 if data was not found.
-     * @param ex    Caused exception.
-     * @return      Error message.
+     *
+     * @param ex Caused exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -48,9 +49,10 @@ public class ExceptionHandlerAdvice {
     }
 
     /**
-     * Returned response code should be 412  if data pre condition is not meet
-     * @param ex    Caused exception.
-     * @return      Error message.
+     * Returned response code should be 412 if data pre condition is not meet
+     *
+     * @param ex Caused exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
@@ -65,8 +67,9 @@ public class ExceptionHandlerAdvice {
 
     /**
      * Returned response code should be 409 if data already exists
-     * @param ex    Caused exception.
-     * @return      Error message.
+     *
+     * @param ex Caused exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -82,8 +85,8 @@ public class ExceptionHandlerAdvice {
     /**
      * If marshall unmarshall fails then return bad request.
      *
-     * @param ex    Exception.
-     * @return      Error message.
+     * @param ex Exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -99,8 +102,8 @@ public class ExceptionHandlerAdvice {
     /**
      * If application fails or unknown error then return 500.
      *
-     * @param ex    Caused exception.
-     * @return      Internal server error.
+     * @param ex Caused exception.
+     * @return Internal server error.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -116,8 +119,8 @@ public class ExceptionHandlerAdvice {
     /**
      * If marshall unmarshall fails then return bad request.
      *
-     * @param ex    Exception.
-     * @return      Error message.
+     * @param ex Exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -133,8 +136,8 @@ public class ExceptionHandlerAdvice {
     /**
      * If marshall unmarshall fails then return bad request.
      *
-     * @param ex    Caused exception.
-     * @return      Error message.
+     * @param ex Caused exception.
+     * @return Error message.
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)

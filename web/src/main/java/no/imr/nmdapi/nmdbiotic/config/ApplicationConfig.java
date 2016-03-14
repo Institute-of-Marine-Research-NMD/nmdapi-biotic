@@ -32,7 +32,6 @@ public class ApplicationConfig {
      * @return Configuration object containg properties.
      * @throws ConfigurationException Error during instansiation.
      */
-    //@Bean(name = "bioticConfig")
     @Bean
     public org.apache.commons.configuration.Configuration configuration() throws ConfigurationException {
         org.apache.commons.configuration.PropertiesConfiguration configuration = new org.apache.commons.configuration.PropertiesConfiguration(System.getProperty("catalina.base") + "/conf/nmdapi_biotic_v1.properties");
@@ -40,10 +39,10 @@ public class ApplicationConfig {
         configuration.setReloadingStrategy(reloadingStrategy);
         return configuration;
     }
-    
+
     @Bean
     @Lazy(false)
-    public CacheHolder cacheHolder() {        
+    public CacheHolder cacheHolder() {
         CacheHolder cacheHolder = new CacheHolder();
         cacheHolder.setCacheHolder(cacheHolder);
         return cacheHolder;

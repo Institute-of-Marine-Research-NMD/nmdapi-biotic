@@ -35,11 +35,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author kjetilf
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { CommonDaoConfig.class, Init.class, BioticAccessDecisionVoter.class})
+@ContextConfiguration(classes = {CommonDaoConfig.class, Init.class, BioticAccessDecisionVoter.class})
 public class TestBioticAccessDecisionVoterNoAuth {
 
     @org.springframework.context.annotation.Configuration
     public static class Init {
+
         @Bean
         public Configuration configuration() {
             Configuration cfg = new PropertiesConfiguration();
@@ -51,12 +52,11 @@ public class TestBioticAccessDecisionVoterNoAuth {
         }
     }
 
-
     @Autowired
     private NMDDatasetDao datasetDao;
 
     @Autowired
-    private AccessDecisionVoter<FilterInvocation>  bioticAccessDecisionVoter;
+    private AccessDecisionVoter<FilterInvocation> bioticAccessDecisionVoter;
 
     /**
      * Test that the voter abstains if it's not a biotic url.
@@ -137,8 +137,8 @@ public class TestBioticAccessDecisionVoterNoAuth {
     }
 
     /**
-     * Test that GET is allowed when not authenticated
-     * and there are missing arguments.
+     * Test that GET is allowed when not authenticated and there are missing
+     * arguments.
      */
     @Test
     public void testGetNoAuthMissingArgs() {
@@ -182,7 +182,8 @@ public class TestBioticAccessDecisionVoterNoAuth {
     }
 
     /**
-     * Test that GET is not allowed when not authenticated and is is not unrestricted
+     * Test that GET is not allowed when not authenticated and is is not
+     * unrestricted
      */
     @Test
     public void testGetNoAuthNotUnrestricted() {
@@ -207,7 +208,6 @@ public class TestBioticAccessDecisionVoterNoAuth {
         Collection<ConfigAttribute> confAttr = mock(Collection.class);
         assertEquals(ACCESS_DENIED, bioticAccessDecisionVoter.vote(auth, filter, confAttr));
         datasetDao.removeDataset(DataTypeEnum.BIOTIC, "data", "Forskningsfartøy", "2015", "G O Sars_LMEL", "2015101");
-
 
     }
 

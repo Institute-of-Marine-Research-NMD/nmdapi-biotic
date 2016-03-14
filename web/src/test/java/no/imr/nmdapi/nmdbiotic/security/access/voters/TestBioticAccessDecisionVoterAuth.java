@@ -41,6 +41,7 @@ public class TestBioticAccessDecisionVoterAuth {
 
     @org.springframework.context.annotation.Configuration
     public static class Init {
+
         @Bean
         public Configuration configuration() {
             Configuration cfg = new PropertiesConfiguration();
@@ -52,12 +53,11 @@ public class TestBioticAccessDecisionVoterAuth {
         }
     }
 
-
     @Autowired
     private NMDDatasetDao datasetDao;
 
     @Autowired
-    private AccessDecisionVoter<FilterInvocation>  bioticAccessDecisionVoter;
+    private AccessDecisionVoter<FilterInvocation> bioticAccessDecisionVoter;
 
     /**
      * Test that HEAD is allowed when not authenticated
@@ -120,7 +120,8 @@ public class TestBioticAccessDecisionVoterAuth {
     }
 
     /**
-     * Test that PUT is not allowed when authenticated user does not have access role.
+     * Test that PUT is not allowed when authenticated user does not have access
+     * role.
      */
     @Test
     public void testPutAuthMissingRole() {
@@ -174,7 +175,8 @@ public class TestBioticAccessDecisionVoterAuth {
     }
 
     /**
-     * Test that DELETE is not allowed when authenticated user does not have access role.
+     * Test that DELETE is not allowed when authenticated user does not have
+     * access role.
      */
     @Test
     public void testDeleteAuthMissingRole() {
@@ -201,7 +203,8 @@ public class TestBioticAccessDecisionVoterAuth {
     }
 
     /**
-     * Test that DELETE is allowed when authenticated user does have access role.
+     * Test that DELETE is allowed when authenticated user does have access
+     * role.
      */
     @Test
     public void testDeleteAuthHasRole() {
@@ -303,6 +306,5 @@ public class TestBioticAccessDecisionVoterAuth {
         Collection<ConfigAttribute> confAttr = mock(Collection.class);
         assertEquals(ACCESS_GRANTED, bioticAccessDecisionVoter.vote(auth, filter, confAttr));
     }
-
 
 }

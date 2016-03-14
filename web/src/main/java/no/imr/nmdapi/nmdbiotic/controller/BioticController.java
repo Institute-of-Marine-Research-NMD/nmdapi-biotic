@@ -51,10 +51,9 @@ public class BioticController {
      */
     @Autowired
     private NMDBioticService nmdBioticService;
-    
+
     @Autowired
     private PropertiesConfiguration config;
-    
 
     /**
      * Get biotic data for mission.
@@ -74,12 +73,12 @@ public class BioticController {
         LOGGER.info("Start BioticController.findByMission");
         return nmdBioticService.getData(missiontype, year, platform, delivery);
     }
-    
+
     /**
      * Get biotic data by filter of serialno interval and specie.
      *
      * @param year
-     * @param from 
+     * @param from
      * @param to
      * @param specie
      * @return Response object.
@@ -93,8 +92,27 @@ public class BioticController {
         LOGGER.info("Start BioticController.findBySpecie");
         Object result = CacheHolder.getInstance().find(year, specie, from, to);
         return result;
-    } 
-    
+    }
+
+    /**
+     * Query for data based on year and serialnumber (from /to)
+     *
+     * @param year
+     * @param from
+     * @param to
+     * @return
+     */
+    @PerformanceLogging
+    @ArgumentLogging
+    @RequestMapping(value = "/{year}/{from}/{to}/serial", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object findBySerialNo(@PathVariable(value = "year") String year, @PathVariable(value = "from") String from, @PathVariable(value = "to") String to) {
+        LOGGER.info("Start BioticController.findBySpecie");
+        Object result = CacheHolder.getInstance().find(year, from, to);
+        return result;
+    }
+
     /**
      * Refreshing cache by checking files.
      *
@@ -111,39 +129,25 @@ public class BioticController {
         ResultElementType element = new ResultElementType();
         element.setResult("refreshCache OK");
         return element;
-    }   
-    
+    }
+
     /**
      * Refreshing cache by checking files.
      *
      * @return Response object.
      */
-//    @PerformanceLogging
-//    @ArgumentLogging
-//    @RequestMapping(value = "/initCache", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
-//    @ResponseStatus(HttpStatus.OK)
-//    @ResponseBody
-//    public Object initCache() {
-//        LOGGER.info("Start BioticController.initCache");
-//        CacheHolder.getInstance().setConfig(config);
-//        CacheHolder.getInstance().init();
-//        ResultElementType element = new ResultElementType();
-//        element.setResult("initCache OK");
-//        return element;
-//    }     
-    
     @PerformanceLogging
     @ArgumentLogging
     @RequestMapping(value = "/clearCache", method = RequestMethod.GET, produces = {"application/xml;charset=UTF-8", "application/json;charset=UTF-8"})
-    @ResponseStatus(HttpStatus.OK) 
-    @ResponseBody 
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public Object clearCache() {
         LOGGER.info("Start BioticController.clearCache");
         CacheHolder.getInstance().clearCache();
         ResultElementType element = new ResultElementType();
-        element.setResult("clearCache OK"); 
+        element.setResult("clearCache OK");
         return element;
-    }    
+    }
 
     /**
      * Delete biotic data for mission.
@@ -170,6 +174,7 @@ public class BioticController {
      * @param year
      * @param platform
      * @param delivery
+     * @param data
      */
     @PerformanceLogging
     @ArgumentLogging
@@ -184,6 +189,11 @@ public class BioticController {
     /**
      * insert biotic data for mission.
      *
+     * @param missiontype
+     * @param year
+     * @param delivery
+     * @param platform
+     * @param missionType
      */
     @PerformanceLogging
     @ArgumentLogging
@@ -240,7 +250,11 @@ public class BioticController {
      * Get data by id or cruise number.
      *
      * @param cruisenr
+     * @param shipname
+     * @param request
      * @return Response object.
+     * @throws java.net.MalformedURLException
+     * @throws java.net.URISyntaxException
      */
     @PerformanceLogging
     @ArgumentLogging

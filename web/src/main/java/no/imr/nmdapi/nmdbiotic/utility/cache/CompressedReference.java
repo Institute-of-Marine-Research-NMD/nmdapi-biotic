@@ -14,17 +14,16 @@ import org.slf4j.LoggerFactory;
 
 public class CompressedReference<T extends Serializable> implements Serializable {
 
-    private static final long serialVersionUID      = 7967994340450625830L;
-    
-    private static final Logger logger        = LoggerFactory.getLogger(CompressedReference.class);
+    private static final long serialVersionUID = 7967994340450625830L;
 
-    private byte[]            theCompressedReferent = null;
+    private static final Logger logger = LoggerFactory.getLogger(CompressedReference.class);
 
-    public CompressedReference(T referent) { 
+    private byte[] theCompressedReferent = null;
+
+    public CompressedReference(T referent) {
         try {
             compress(referent);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
     }
@@ -36,11 +35,9 @@ public class CompressedReference<T extends Serializable> implements Serializable
     public T get() {
         try {
             return decompress();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             logger.error(e.getMessage(), e);;
         }
         return null;
@@ -58,7 +55,7 @@ public class CompressedReference<T extends Serializable> implements Serializable
         bos.flush();
 
         theCompressedReferent = bos.toByteArray();
-        
+
         ous.close();
         zos.close();
         bos.close();
@@ -66,11 +63,10 @@ public class CompressedReference<T extends Serializable> implements Serializable
 
     @SuppressWarnings("unchecked")
     private T decompress() throws IOException, ClassNotFoundException {
-        T tmpObject = null;
         ByteArrayInputStream bis = new ByteArrayInputStream(theCompressedReferent);
         GZIPInputStream zis = new GZIPInputStream(bis);
         ObjectInputStream ois = new ObjectInputStream(zis);
-        tmpObject = (T) ois.readObject();
+        T tmpObject = (T) ois.readObject();
 
         ois.close();
         zis.close();
@@ -78,9 +74,9 @@ public class CompressedReference<T extends Serializable> implements Serializable
 
         return tmpObject;
     }
-    
+
     public void dispose() {
         theCompressedReferent = null;
     }
-    
+
 }

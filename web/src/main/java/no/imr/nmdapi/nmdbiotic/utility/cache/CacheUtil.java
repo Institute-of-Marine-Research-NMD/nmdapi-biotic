@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,15 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.bind.JAXBException;
 
 import no.imr.framework.logging.slf4j.aspects.stereotype.PerformanceLogging;
-import no.imr.nmdapi.generic.nmdbiotic.domain.v1.AgeDeterminationType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.CatchSampleType;
-import no.imr.nmdapi.generic.nmdbiotic.domain.v1.CopepodedevstageType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.FishStationType;
-import no.imr.nmdapi.generic.nmdbiotic.domain.v1.IndividualType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionType;
 import no.imr.nmdapi.generic.nmdbiotic.domain.v1.MissionsType;
-import no.imr.nmdapi.generic.nmdbiotic.domain.v1.PreyType;
-import no.imr.nmdapi.generic.nmdbiotic.domain.v1.PreylengthType;
 import no.imr.nmdapi.nmdbiotic.utility.common.CommonUtil;
 import no.imr.nmdapi.nmdbiotic.utility.common.JAXBUtility;
 import no.imr.nmdapi.nmdbiotic.utility.files.FilesUtil;
@@ -43,38 +37,38 @@ import com.google.common.collect.Maps;
 public class CacheUtil extends EThread {
 //public class CacheUtil {
 
-    private final static String      TAG_MISSIONS             = "<missions ";
-    private final static String      TAG_MISSION_YEAR         = "<mission year";
-    private final static String      TAG_FISHSTATION_SERIALNO = "fishstation serialno";
-    private final static String      XML_MISSIONS_XMLNS       = TAG_MISSIONS + JAXBUtility.XML_XMLNS;
-    private final static String      XML_NMD_BIOTIC_FORMAT    = "http://www.imr.no/formats/nmdbiotic/v1";
-    public final static String       XML_MISSIONS             = XML_MISSIONS_XMLNS + XML_NMD_BIOTIC_FORMAT + "\">";
-    public final static String       XML_CR                   = "\n";
+    private final static String TAG_MISSIONS = "<missions ";
+    private final static String TAG_MISSION_YEAR = "<mission year";
+    private final static String TAG_FISHSTATION_SERIALNO = "fishstation serialno";
+    private final static String XML_MISSIONS_XMLNS = TAG_MISSIONS + JAXBUtility.XML_XMLNS;
+    private final static String XML_NMD_BIOTIC_FORMAT = "http://www.imr.no/formats/nmdbiotic/v1";
+    public final static String XML_MISSIONS = XML_MISSIONS_XMLNS + XML_NMD_BIOTIC_FORMAT + "\">";
+    public final static String XML_CR = "\n";
 
-    public final static String       DIFF_UPDATED_FILES       = "UPDATED_FILES";
-    public final static String       DIFF_REMOVED_FILES       = "REMOVED_FILES";
-    public final static String       DIFF_NEW_FILES           = "NEW_FILES";
+    public final static String DIFF_UPDATED_FILES = "UPDATED_FILES";
+    public final static String DIFF_REMOVED_FILES = "REMOVED_FILES";
+    public final static String DIFF_NEW_FILES = "NEW_FILES";
 
-    protected static String          KEY_PATH                 = "pre.data.dir";
-    protected static String          KEY_FORMAT               = "memory.format";
-    protected static String          KEY_TEST                 = "data.test";
-    protected static String          KEY_TEST_PATH            = "path.test";
-    protected static String          KEY_WAIT_INIT            = "wait.init";
-    protected static String          KEY_YEAR                 = "data.year";
-    protected static String          KEY_INTERVAL             = "checkfiles.interval";
-    protected static String          path_data                = "/san/test/datasets/";
-    protected static boolean         memory_format            = true;
-    protected static boolean         data_test                = false;
-    protected static String          path_test                = "/biotictest/";
-    protected static long            wait_init                = 10000;
-    protected static long            interval_check           = 36000000;
-    protected static String          data_year                = null;
+    protected static String KEY_PATH = "pre.data.dir";
+    protected static String KEY_FORMAT = "memory.format";
+    protected static String KEY_TEST = "data.test";
+    protected static String KEY_TEST_PATH = "path.test";
+    protected static String KEY_WAIT_INIT = "wait.init";
+    protected static String KEY_YEAR = "data.year";
+    protected static String KEY_INTERVAL = "checkfiles.interval";
+    protected static String path_data = "/san/test/datasets/";
+    protected static boolean memory_format = true;
+    protected static boolean data_test = false;
+    protected static String path_test = "/biotictest/";
+    protected static long wait_init = 10000;
+    protected static long interval_check = 36000000;
+    protected static String data_year = null;
 
-    private static final Logger      logger                   = LoggerFactory.getLogger(CacheUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CacheUtil.class);
 
-    protected JAXBUtility            jaxbUtility              = null;
-    protected FilesUtil              filesUtil                = new FilesUtil();
-    protected SerialNumberComparator serialNumberComparator   = new SerialNumberComparator();
+    protected JAXBUtility jaxbUtility = null;
+    protected FilesUtil filesUtil = new FilesUtil();
+    protected SerialNumberComparator serialNumberComparator = new SerialNumberComparator();
 
     protected Map<File, Long> getBioticFiles() {
         long rtime = CommonUtil.printTimeElapsed("getBioticFiles");
@@ -83,13 +77,11 @@ public class CacheUtil extends EThread {
         try {
             if ((data_year != null) && !data_year.isEmpty()) {
                 bioticMap = filesUtil.getFileMapByFilter(path_data, "biotic", data_year);
-            }
-            else {
+            } else {
                 bioticMap = filesUtil.getFileMapByFilter(path_data, "biotic");
                 logger.info("" + bioticMap.size());
             }
-        }
-        catch (IOException exp) {
+        } catch (IOException exp) {
             logger.error(exp.getMessage(), exp);
         }
         CommonUtil.printTimeElapsed(rtime, "getBioticFiles");
@@ -112,8 +104,7 @@ public class CacheUtil extends EThread {
             if ((mapDiff.entriesOnlyOnLeft().size() > 0) || (mapDiff.entriesOnlyOnRight().size() > 0)) {
                 // Need a full refresh of API reference data
                 nameList = null;
-            }
-            else {
+            } else {
                 Map<File, ValueDifference<Long>> map = mapDiff.entriesDiffering();
                 nameList = ImmutableList.copyOf(map.keySet());
             }
@@ -197,8 +188,7 @@ public class CacheUtil extends EThread {
             if (isLegalIndexes(beginIndex, endIndex)) {
                 result = xmlData.substring(beginIndex, endIndex);
             }
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             result = null;
             logger.error("Not legal biotic file", exp);
         }
@@ -212,8 +202,7 @@ public class CacheUtil extends EThread {
         try {
             path = file.getName();
             ok = header != null && !missions.getMission().isEmpty();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             ok = false;
         }
         if (!ok) {
@@ -233,13 +222,11 @@ public class CacheUtil extends EThread {
                     if (specieMap.size() != nextSpecieIndex) {
                         logger.error("SW bug :specieMap.size() != nextSpecieIndex " + specieMap.size() + " != " + nextSpecieIndex);
                     }
-                }
-                else if (specie == null) {
+                } else if (specie == null) {
                     logger.error("specie null");
 
                 }
-            }
-            catch (Exception exp) {
+            } catch (Exception exp) {
                 logger.error(exp.getMessage(), exp);
             }
 
@@ -266,7 +253,7 @@ public class CacheUtil extends EThread {
 
     private List<String> sortCatchSamples(List<CatchSampleType> catchSamples, int[] speciesArr, Map<String, Integer> specieMap) throws JAXBException, Exception {
         CatchSampleType[] orderedCatchSamples = new CatchSampleType[catchSamples.size()];
-        // int prevIndex = -1;
+
         CatchSamplesSearch catchSamplesSearch = new CatchSamplesSearch();
         int index = 0;
         while (index < catchSamples.size()) {
@@ -274,18 +261,15 @@ public class CacheUtil extends EThread {
             int[] foundArray = catchSamplesSearch.binarySearchHandleDuplicates(speciesArr, specieMap.get(specie));
             if (foundArray != null) {
                 for (int fIndex = 0; fIndex < foundArray.length; fIndex++) {
-                    // index += fIndex;
                     try {
                         int foundIndex = foundArray[fIndex];
                         orderedCatchSamples[foundIndex] = catchSamples.get(index + fIndex);
-                    }
-                    catch (Exception exp) {
+                    } catch (Exception exp) {
                         logger.info(exp.getMessage(), exp);
                     }
                 }
                 index += foundArray.length - 1;
-            }
-            else {
+            } else {
                 throw new Exception("SW bug sortCatchSamples : index not found");
             }
             index++;
@@ -295,9 +279,7 @@ public class CacheUtil extends EThread {
 
     public SerialNoCompressedData addCompressedData(List<String> catchSamples, FishStationType fishStationType) throws JAXBException {
 
-        boolean ok = false;
-        SerialNoCompressedData compressData = null;
-        compressData = new SerialNoCompressedData();
+        SerialNoCompressedData compressData = new SerialNoCompressedData();
 
         compressData.setCatchsample(catchSamples);
         fishStationType.getCatchsample().clear();
@@ -332,53 +314,17 @@ public class CacheUtil extends EThread {
                 data.setCommpressedData(addCompressedData(xmlList, fishStationType));
                 ok = serialList.add(data);
 
-            }
-            else {
+            } else {
                 // logger.info("catchSamples.isEmpty "+file.getAbsolutePath());
             }
             //testMemoryLeak(catchSamples);
             catchSamples = clearList(catchSamples);
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             data = null;
             logger.error(exp.getMessage(), exp);
         }
 
         return ok;
-    }
-
-    private void testMemoryLeak(List<CatchSampleType> catchSamples) {
-        // Testing memoryleak
-        for (CatchSampleType catchSampleType : catchSamples) {
-            List<PreyType> listPrey = catchSampleType.getPrey();
-            List<IndividualType> listIndividualType = catchSampleType.getIndividual();
-            for (IndividualType individualType : listIndividualType) {
-                List<AgeDeterminationType> listAgeDeterminationType = individualType.getAgedetermination();
-                for (AgeDeterminationType ageDeterminationType : listAgeDeterminationType) {
-                    ageDeterminationType = null;
-                }
-                listAgeDeterminationType = clearList(listAgeDeterminationType);
-                individualType = null;
-            }
-            listIndividualType = clearList(listIndividualType);
-
-            for (PreyType preyType : listPrey) {
-                List<PreylengthType> listPreylengthType = preyType.getPreylength();
-                for (PreylengthType preylengthType : listPreylengthType) {
-                    preylengthType = null;
-                }
-                listPreylengthType = clearList(listPreylengthType);
-
-                List<CopepodedevstageType> listCopepodedevstageType = preyType.getCopepodedevstage();
-                for (CopepodedevstageType copepodedevstageType : listCopepodedevstageType) {
-                    copepodedevstageType = null;
-                }
-                listCopepodedevstageType = clearList(listCopepodedevstageType);
-                preyType = null;
-            }
-            listPrey = clearList(listPrey);
-            catchSampleType = null;
-        }
     }
 
     public List clearList(List list) {
@@ -403,21 +349,23 @@ public class CacheUtil extends EThread {
         runtime.gc();
         runtime.runFinalization();
         runtime.gc();
-        logger.info("usedMemory " +readableFileSize(usedMemory(runtime)) + "");
+        logger.info("usedMemory " + readableFileSize(usedMemory(runtime)) + "");
         logger.info("usedMemory " + usedMemory(runtime) + "");
         rtime = CommonUtil.printTimeElapsed(rtime, "gcRunFinalization");
     }
 
-     private long usedMemory(Runtime runtime) {
-         return runtime.totalMemory() - runtime.freeMemory();
-     }
-     
-     private String readableFileSize(long size) {
-         if(size <= 0) return "0";
-         final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
-         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
-         return new DecimalFormat("#,##0.####").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-     }     
+    private long usedMemory(Runtime runtime) {
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
+
+    private String readableFileSize(long size) {
+        if (size <= 0) {
+            return "0";
+        }
+        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.####").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
 
     private Map<String, List<SerialNumberIndexedData>> removeFilesFromCache(List<File> fileList, Map<String, Integer> specieMap, Map<File, String> fileHeaderMap, Map<String, List<SerialNumberIndexedData>> fileIndexedMap) {
         for (File file : fileList) {
@@ -493,8 +441,7 @@ public class CacheUtil extends EThread {
                 missions = null;
                 file = null;
             }
-        }
-        catch (Exception exp) {
+        } catch (IOException | JAXBException exp) {
             logger.error(exp.getMessage(), exp);
         }
         return fileIndexedMap;
@@ -518,23 +465,14 @@ public class CacheUtil extends EThread {
                 fileIndexedMap = sortSerialNoList(year, fileIndexedMap);
                 fileList = clearList(fileList);
             }
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             logger.error(exp.getMessage(), exp);
-        }
-        finally {
+        } finally {
             gcRunFinalization();
         }
         CommonUtil.printTimeElapsed(rtime, "createSerialNumberYearMap");
         return fileIndexedMap;
     }
-
-    // private SerialNumberIndexedData dispose(SerialNumberIndexedData
-    // serialNumberIndexedData) {
-    // serialNumberIndexedData.dispose();
-    // serialNumberIndexedData = null;
-    // return serialNumberIndexedData;
-    // }
 
     public Map<String, List<SerialNumberIndexedData>> clearYearSerialMap(Map<String, List<SerialNumberIndexedData>> serialMap) {
         try {
@@ -547,11 +485,9 @@ public class CacheUtil extends EThread {
                 fileList = clearList(fileList);
             }
             serialMap = clearMap(serialMap);
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             logger.error(exp.getMessage(), exp);
-        }
-        finally {
+        } finally {
             gcRunFinalization();
         }
 
@@ -565,11 +501,9 @@ public class CacheUtil extends EThread {
                 fileList = clearList(fileList);
             }
             yearMap = clearMap(yearMap);
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             logger.error(exp.getMessage(), exp);
-        }
-        finally {
+        } finally {
             gcRunFinalization();
         }
         return yearMap;
@@ -579,8 +513,7 @@ public class CacheUtil extends EThread {
         if (data_test) {
             try {
                 FileUtils.writeStringToFile(new File(path_test + "data.xml"), xmlString, StandardCharsets.UTF_8.name());
-            }
-            catch (IOException exp) {
+            } catch (IOException exp) {
                 logger.error(exp.getMessage(), exp);
             }
         }

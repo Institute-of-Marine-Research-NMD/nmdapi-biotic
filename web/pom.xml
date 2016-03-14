@@ -6,7 +6,7 @@
         <artifactId>parent</artifactId>
         <version>1.0.10-SNAPSHOT</version>
     </parent>
-    <artifactId>nmdbiotic</artifactId>
+    <artifactId>biotic</artifactId>
     <packaging>war</packaging>
     <name>API - NMDBiotic</name>
 
@@ -58,6 +58,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8094</port>
+                </configuration>
             </plugin>
         </plugins>
     </build>

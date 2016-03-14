@@ -22,21 +22,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CacheHolder extends CacheUtil {
 
-    private static final Logger                        logger          = LoggerFactory.getLogger(CacheHolder.class);
+    private static final Logger logger = LoggerFactory.getLogger(CacheHolder.class);
 
     @Autowired
-    private PropertiesConfiguration                    config          = null;
+    private PropertiesConfiguration config = null;
 
-    private Map<String, Integer>                       specieMap       = new ConcurrentHashMap<String, Integer>();
-    private Map<File, String>                          fileHeaderMap   = new ConcurrentHashMap<File, String>();
-    private Map<String, List<SerialNumberIndexedData>> yearSerialMap   = null;
-    private Map<File, Long>                            currentFilesMap = null;
-    private Map<File, Long>                            newFilesMap     = null;
+    private Map<String, Integer> specieMap = new ConcurrentHashMap<String, Integer>();
+    private Map<File, String> fileHeaderMap = new ConcurrentHashMap<File, String>();
+    private Map<String, List<SerialNumberIndexedData>> yearSerialMap = null;
+    private Map<File, Long> currentFilesMap = null;
+    private Map<File, Long> newFilesMap = null;
 
-    private Object                                     lock            = null;
-    private boolean                                    checkingFiles   = false;
+    private Object lock = null;
+    private boolean checkingFiles = false;
 
-    private static CacheHolder                         cacheHolder     = null;
+    private static CacheHolder cacheHolder = null;
 
     public CacheHolder() {
         init();
@@ -132,8 +132,7 @@ public class CacheHolder extends CacheUtil {
             System.gc();
             gcRunFinalization();
 
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             logger.error(exp.getMessage(), exp);
         }
         CommonUtil.printTimeElapsed(rtime, "clearCache");
@@ -160,8 +159,7 @@ public class CacheHolder extends CacheUtil {
             while ((!isInterrupted()) && (++count < 10)) {
                 lInterrupt();
             }
-        }
-        catch (Exception exp) {
+        } catch (Exception exp) {
             logger.error(exp.getMessage(), exp);
         }
         CommonUtil.printTimeElapsed(rtime, "shutdown");
@@ -180,8 +178,28 @@ public class CacheHolder extends CacheUtil {
                 missions = (MissionsType) jaxbUtility.unmarshal(resultString, MissionsType.class);
                 testWriteToFile(resultString);
                 resultString = null;
+            } catch (JAXBException exp) {
+                logger.error(exp.getMessage(), exp);
+                throw new ApplicationException(exp.getMessage(), exp);
             }
-            catch (JAXBException exp) {
+        }
+        CommonUtil.printTimeElapsed(rtime, message);
+        return missions;
+    }
+
+    @PerformanceLogging
+    public synchronized MissionsType find(String year, String fromSerialNo, String toSerialNo) {
+        String message = "find : parameters year :" + year + " from :" + fromSerialNo + " to :" + toSerialNo;
+        long rtime = CommonUtil.printTimeElapsed(message);
+        MissionsType missions = null;
+        synchronized (lock) {
+            CatchSamplesSearch search = new CatchSamplesSearch();
+            String resultString = search.find(year, new BigInteger(fromSerialNo), new BigInteger(toSerialNo), yearSerialMap, specieMap, fileHeaderMap, this);
+            try {
+                missions = (MissionsType) jaxbUtility.unmarshal(resultString, MissionsType.class);
+                testWriteToFile(resultString);
+                resultString = null;
+            } catch (JAXBException exp) {
                 logger.error(exp.getMessage(), exp);
                 throw new ApplicationException(exp.getMessage(), exp);
             }
@@ -208,24 +226,20 @@ public class CacheHolder extends CacheUtil {
         logger.info("setCheckingFiles " + this.checkingFiles);
     }
 
-     public static void main(String[] args) {
-    
-     path_data = "D:\\san\\";
-     path_data = "D:\\santomcat7test\\datasets\\";
-     path_data = "D:\\santomcat7prod\\datasets\\";
-    
-     List<File> bioticList = null;
-    
-    
-     FilesUtil filesUtil = new FilesUtil();
-    
-     bioticList = filesUtil.getFilesByFilter(path_data, "biotic", "2014");
-     for (int inx = 1990; inx < 2017; inx++) {
-     bioticList = filesUtil.getFilesByFilter(path_data, "biotic", inx + "");
-     logger.info("year " + inx + " size " + bioticList.size());
-     }
-    
-    
-     }
+    public static void main(String[] args) {
+
+        path_data = "D:\\san\\";
+        path_data = "D:\\santomcat7test\\datasets\\";
+        path_data = "D:\\santomcat7prod\\datasets\\";
+
+        FilesUtil filesUtil = new FilesUtil();
+
+        List<File> bioticList = filesUtil.getFilesByFilter(path_data, "biotic", "2014");
+        for (int inx = 1990; inx < 2017; inx++) {
+            bioticList = filesUtil.getFilesByFilter(path_data, "biotic", inx + "");
+            logger.info("year " + inx + " size " + bioticList.size());
+        }
+
+    }
 
 }

@@ -2,11 +2,9 @@ package no.imr.nmdapi.nmdbiotic.full;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.DifferenceEngine;
 import org.custommonkey.xmlunit.XMLUnit;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -37,7 +35,7 @@ public class TestXML {
         Diff d = new Diff(source2, source1);
         DetailedDiff dd = new DetailedDiff(d);
         for (Object differenceObj : dd.getAllDifferences()) {
-            Difference difference = (Difference)differenceObj;
+            Difference difference = (Difference) differenceObj;
             System.out.println(difference.toString());
         }
         assertEquals(1, dd.getAllDifferences().size());

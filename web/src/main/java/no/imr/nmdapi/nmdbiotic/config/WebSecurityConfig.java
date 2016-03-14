@@ -54,7 +54,7 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().anyRequest().authenticated().accessDecisionManager(new NMDsecurityManager(accessDecisionVoters));
+        http.authorizeRequests().anyRequest().authenticated().accessDecisionManager(new NMDsecurityManager(accessDecisionVoters));
         http.anonymous().authorities("ANONYMOUS");
     }
 
@@ -79,7 +79,7 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
     public TokenEnhancer tokenEnhancer() {
         TokenEnhancer enhancer = null;
         try {
-             enhancer = new JwtAccessTokenConverter("keys/fs.cer");
+            enhancer = new JwtAccessTokenConverter("keys/fs.cer");
             return enhancer;
         } catch (IOException | CertificateException | InvalidKeyException ex) {
             LOGGER.error("Error init tokenenhancer", ex);
@@ -88,8 +88,8 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
     }
 
     /**
-     * Initalize tokenstore. This tokenstore does not store the tokens as they are
-     *  signed jwt tokens.
+     * Initalize tokenstore. This tokenstore does not store the tokens as they
+     * are signed jwt tokens.
      *
      * @return
      */
