@@ -8,7 +8,7 @@
     </parent>
     <groupId>no.imr.nmdapi.biotic</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.0.12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NMDAPI parent - NMDBiotic</name>
     <modules>
